@@ -10,6 +10,8 @@ qt_add_executable(todoapp
   src/mainwindow.h src/mainwindow.cpp
   src/mainpage.h src/mainpage.cpp
   src/editpage.h src/editpage.cpp
+  src/note.h src/note.cpp
+  src/editbuttonswidget.h src/editbuttonswidget.cpp
 )
 
 target_link_libraries(todoapp

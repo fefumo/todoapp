@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   QTabWidget *tab_widget = new QTabWidget(this);
   main_layout->addWidget(tab_widget);
 
-  tab_widget->tabBar()->setExpanding(true);
+  tab_widget->tabBar()->setDocumentMode(true);
   tab_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   tab_widget->addTab(new MainPage(tab_widget), "main");
   tab_widget->addTab(new EditPage(tab_widget), "edit");

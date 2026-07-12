@@ -22,7 +22,7 @@ void MainWindow::setup_pages() {
 
   tabs->addTab(main_page, "main");
   tabs->addTab(edit_page, "edit");
-  connect(main_page, &MainPage::create_task_requeted, this,
+  connect(main_page, &MainPage::create_task_requested, this,
           &MainWindow::goto_edit_tab);
 }
 
@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {
 
   QPushButton* exit_button = new QPushButton("Exit", this);
   connect(exit_button, &QPushButton::clicked, &QApplication::exit);
+  exit_button->setProperty("role", "primary");
 
   layout->addWidget(tabs);
   layout->addWidget(exit_button);

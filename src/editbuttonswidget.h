@@ -17,6 +17,7 @@ class EditButtonsWidget : public QWidget {
 
  signals:
   void create_task_requested();
+  void delete_task_requested();
 };
 
 #endif  // EDITBUTTONSWIDGET_H

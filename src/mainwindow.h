@@ -3,8 +3,9 @@
 
 #include "note.h"
 #include <QList>
+#include <QTabWidget>
+#include <QVBoxLayout>
 #include <QWidget>
-#include <qlist.h>
 
 class MainWindow : public QWidget {
   Q_OBJECT
@@ -13,6 +14,9 @@ public:
 
 private:
   QList<Note> notes;
+  QVBoxLayout *layout;
+  QTabWidget *tabs;
+  void setup_pages();
 };
 
 #endif // !MAINWINDOW_H

@@ -1,0 +1,171 @@
+
+QWidget {
+    background-color: {{background}};
+    color: {{text}};
+}
+
+
+/* Pages */
+
+QWidget#mainPage,
+QWidget#editPage {
+    background-color: {{background}};
+}
+
+
+/* Tabs */
+
+QTabWidget::pane {
+    border: 1px solid {{border}};
+}
+
+QTabBar::tab {
+    background-color: {{surface}};
+    color: {{muted}};
+
+    border: 1px solid {{border}};
+    border-radius: 5px;
+
+    padding: 6px 12px;
+}
+
+QTabBar::tab:hover {
+    color: {{text}};
+    border-color: {{muted}};
+}
+
+QTabBar::tab:selected {
+    color: {{text}};
+    border-bottom: 2px solid {{accent}};
+}
+
+
+/* Task list */
+
+QListView#taskList {
+    background-color: {{surface}};
+    color: {{text}};
+
+    border: 1px solid {{border}};
+    border-radius: 5px;
+
+    /* outline: none; */
+}
+
+QListView#taskList::item {
+    /* padding: 6px; */
+    border-radius: 4px;
+}
+
+QListView#taskList::item:hover {
+    background-color: {{border}};
+}
+
+QListView#taskList::item:selected {
+    background-color: {{accent}};
+    color: {{background}};
+}
+
+
+/* Button panel */
+
+QWidget#editButtonsPanel {
+    background-color: {{surface}};
+
+    border: 1px solid {{border}};
+    border-radius: 5px;
+}
+
+
+/* Buttons */
+
+QPushButton {
+    background-color: {{surface}};
+    color: {{text}};
+
+    border: 1px solid {{border}};
+    border-radius: 5px;
+
+    padding: 6px 10px;
+}
+
+QPushButton:hover {
+    background-color: {{border}};
+}
+
+QPushButton:pressed {
+    border-color: {{accent}};
+}
+
+QPushButton:disabled {
+    color: {{border}};
+}
+
+
+/* Create button */
+
+QPushButton[role="primary"] {
+    border-color: {{accent}};
+}
+
+QPushButton[role="primary"]:pressed {
+    background-color: {{accent}};
+    border-color: {{text}};
+    color: {{background}};
+}
+
+
+/* Delete button */
+
+QPushButton[role="danger"] {
+    color: {{danger}};
+    border-color: {{danger}};
+}
+
+
+QPushButton[role="danger"]:pressed {
+    background-color: {{danger}};
+    color: {{background}};
+}
+
+
+/* Text inputs */
+
+QLineEdit,
+QTextEdit,
+QPlainTextEdit {
+    background-color: {{surface}};
+    color: {{text}};
+
+    border: 1px solid {{border}};
+    border-radius: 5px;
+}
+
+QLineEdit:focus,
+QTextEdit:focus,
+QPlainTextEdit:focus {
+    border-color: {{accent}};
+}
+
+
+/* Scrollbars */
+
+QScrollBar:vertical {
+    width: 8px;
+    background: transparent;
+}
+
+QScrollBar::handle:vertical {
+    background-color: {{border}};
+    border-radius: 4px;
+    min-height: 24px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: {{accent}};
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0;
+}

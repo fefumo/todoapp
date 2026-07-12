@@ -14,6 +14,19 @@ qt_add_executable(todoapp
   src/editbuttonswidget.h src/editbuttonswidget.cpp
 )
 
+qt_add_resources(todoapp "application_styles"
+  PREFIX "/styles"
+  BASE "${CMAKE_CURRENT_SOURCE_DIR}/resources"
+  FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/resources/app.qss"
+)
+
+target_sources(todoapp
+  PRIVATE
+    src/appstyle.cpp
+    src/appstyle.h
+)
+
 target_link_libraries(todoapp
     PRIVATE
         Qt::Core

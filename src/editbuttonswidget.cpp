@@ -3,11 +3,11 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-EditButtonsWidget::EditButtonsWidget(QWidget *parent) : QWidget{parent} {
+EditButtonsWidget::EditButtonsWidget(QWidget* parent) : QWidget{parent} {
   setObjectName("editButtonsWidget");
   setAttribute(Qt::WA_StyledBackground, true);
 
-  auto *layout = new QVBoxLayout(this);
+  auto* layout = new QVBoxLayout(this);
 
   create_button = new QPushButton("create", this);
   delete_button = new QPushButton("delete", this);
@@ -22,4 +22,7 @@ EditButtonsWidget::EditButtonsWidget(QWidget *parent) : QWidget{parent} {
   layout->addStretch();
 
   layout->addWidget(delete_button);
+
+  connect(create_button, &QPushButton::clicked, this,
+          &EditButtonsWidget::create_task_requested);
 }

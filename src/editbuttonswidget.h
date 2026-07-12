@@ -1,23 +1,22 @@
 #ifndef EDITBUTTONSWIDGET_H
 #define EDITBUTTONSWIDGET_H
 
+#include <QModelIndex>
 #include <QPushButton>
 #include <QWidget>
 
 class EditButtonsWidget : public QWidget {
   Q_OBJECT
-public:
-  explicit EditButtonsWidget(QWidget *parent = nullptr);
+ public:
+  explicit EditButtonsWidget(QWidget* parent = nullptr);
 
-public slots:
-  // void clicked(const QModelIndex &index);
+ private:
+  QPushButton* create_button;
+  QPushButton* delete_button;
+  QPushButton* edit_button;
 
-private:
-  QPushButton *create_button;
-  QPushButton *delete_button;
-  QPushButton *edit_button;
-
-signals:
+ signals:
+  void create_task_requested();
 };
 
-#endif // EDITBUTTONSWIDGET_H
+#endif  // EDITBUTTONSWIDGET_H

@@ -5,10 +5,11 @@
 
 class MainPage : public QWidget {
   Q_OBJECT
-public:
-  explicit MainPage(QWidget *parent = nullptr);
+ public:
+  explicit MainPage(QWidget* parent = nullptr);
 
-signals:
+ signals:
+  void create_task_requeted();
 };
 
-#endif // MAINPAGE_H
+#endif  // MAINPAGE_H

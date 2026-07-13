@@ -36,4 +36,16 @@ EditButtonsWidget::EditButtonsWidget(QWidget* parent) : QWidget{parent} {
 
   connect(delete_button, &QPushButton::clicked, this,
           &EditButtonsWidget::delete_task_requested);
+
+  hide_function_buttons();
+}
+
+void EditButtonsWidget::hide_function_buttons() {
+  create_button->hide();
+  delete_button->hide();
+}
+
+void EditButtonsWidget::show_function_buttons() {
+  create_button->show();
+  delete_button->show();
 }

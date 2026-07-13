@@ -11,7 +11,7 @@
 // #include "task.h"
 
 void MainPage::delete_task() {
-  QItemSelectionModel* selectionModel = list_view->selectionModel();
+  // TODO: delete multiple selected items
   if (!selectionModel->hasSelection()) {
     qDebug() << "in MainPage::delete_task(): no items selected";
     return;
@@ -22,17 +22,29 @@ void MainPage::delete_task() {
   model->removeRows(item->row(), 1, index.parent());
 }
 
+void MainPage::check_selection() {
+  // TODO:: that slot is being called too much. i have to think about a better
+  // solution (somehow get a signal for when there is no selection)
+  if (selectionModel->hasSelection()) {
+    qDebug() << "emitting items_selected";
+    emit items_selected();
+  } else {
+    qDebug() << "emitting items_not_selected";
+    emit items_not_selected();
+  }
+}
+
 MainPage::MainPage(QWidget* parent) : QWidget{parent} {
   setObjectName("mainPage");
   setAttribute(Qt::WA_StyledBackground, true);
 
-  auto* layout = new QHBoxLayout(this);
+  layout = new QHBoxLayout(this);
 
-  EditButtonsWidget* edit_buttons = new EditButtonsWidget();
-  edit_buttons->setMinimumWidth(150);
-  edit_buttons->setMaximumWidth(190);
+  editButtons = new EditButtonsWidget();
+  editButtons->setMinimumWidth(150);
+  editButtons->setMaximumWidth(190);
 
-  connect(edit_buttons, &EditButtonsWidget::create_task_requested, this,
+  connect(editButtons, &EditButtonsWidget::create_task_requested, this,
           &MainPage::create_task_requested);
 
   model = new QStandardItemModel(0, 1, this);
@@ -46,13 +58,24 @@ MainPage::MainPage(QWidget* parent) : QWidget{parent} {
     // model->appendRow();
   }
 
-  list_view = new QListView(this);
-  list_view->setObjectName("taskList");
-  list_view->setModel(model);
+  listView = new QListView(this);
+  listView->setObjectName("taskList");
+  listView->setModel(model);
 
-  connect(edit_buttons, &EditButtonsWidget::delete_task_requested, this,
+  selectionModel = listView->selectionModel();
+
+  connect(editButtons, &EditButtonsWidget::delete_task_requested, this,
           &MainPage::delete_task);
 
-  layout->addWidget(list_view, 1);
-  layout->addWidget(edit_buttons, 0);
+  layout->addWidget(listView, 1);
+  layout->addWidget(editButtons, 0);
+
+  connect(selectionModel, &QItemSelectionModel::selectionChanged, this,
+          &MainPage::check_selection);
+
+  connect(this, &MainPage::items_selected, editButtons,
+          &EditButtonsWidget::show_function_buttons);
+
+  connect(this, &MainPage::items_not_selected, editButtons,
+          &EditButtonsWidget::hide_function_buttons);
 }

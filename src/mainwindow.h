@@ -8,7 +8,6 @@
 
 #include "editpage.h"
 #include "mainpage.h"
-#include "task.h"
 
 class MainWindow : public QWidget {
   Q_OBJECT
@@ -19,11 +18,11 @@ class MainWindow : public QWidget {
   void goto_edit_tab();
 
  private:
-  QList<Task> notes;
-  QVBoxLayout* layout;
-  QTabWidget* tabs;
-  MainPage* main_page;
-  EditPage* edit_page;
+  QList<Task> _notes;
+  QVBoxLayout* _layout;
+  QTabWidget* _tabs;
+  MainPage* _main_page;
+  EditPage* _edit_page;
 
   void setup_pages();
 };

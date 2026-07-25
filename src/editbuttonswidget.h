@@ -11,9 +11,9 @@ class EditButtonsWidget : public QWidget {
   explicit EditButtonsWidget(QWidget* parent = nullptr);
 
  private:
-  QPushButton* create_button;
-  QPushButton* delete_button;
-  QPushButton* edit_button;
+  QPushButton* createButton_;
+  QPushButton* deleteButton_;
+  QPushButton* editButton_;
 
  signals:
   void create_task_requested();

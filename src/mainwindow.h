@@ -18,11 +18,11 @@ class MainWindow : public QWidget {
   void goto_edit_tab();
 
  private:
-  QList<Task> _notes;
-  QVBoxLayout* _layout;
-  QTabWidget* _tabs;
-  MainPage* _main_page;
-  EditPage* _edit_page;
+  QList<Task> notes_;
+  QVBoxLayout* layout_;
+  QTabWidget* tabs_;
+  MainPage* mainPage_;
+  EditPage* editPage_;
 
   void setup_pages();
 };

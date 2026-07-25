@@ -14,20 +14,20 @@
 
 void MainPage::delete_task() {
   // TODO: delete multiple selected items
-  if (!_selectionModel->hasSelection()) {
+  if (!selectionModel_->hasSelection()) {
     qDebug() << "in MainPage::delete_task(): no items selected";
     return;
   }
-  const QModelIndex index = _selectionModel->currentIndex();
-  QStandardItem* item = _model->itemFromIndex(index);
+  const QModelIndex index = selectionModel_->currentIndex();
+  QStandardItem* item = model_->itemFromIndex(index);
   qDebug() << "removing row " << item->row() << ", index: " << index;
-  _model->removeRows(item->row(), 1, index.parent());
+  model_->removeRows(item->row(), 1, index.parent());
 }
 
 void MainPage::check_selection() {
   // TODO:: that slot is being called too much. i have to think about a better
   // solution (somehow get a signal for when there is no selection)
-  if (_selectionModel->hasSelection()) {
+  if (selectionModel_->hasSelection()) {
     qDebug() << "emitting items_selected";
     emit items_selected();
   } else {
@@ -40,16 +40,16 @@ MainPage::MainPage(QWidget* parent) : QWidget{parent} {
   setObjectName("mainPage");
   setAttribute(Qt::WA_StyledBackground, true);
 
-  _layout = new QHBoxLayout(this);
+  layout_ = new QHBoxLayout(this);
 
-  _editButtons = new EditButtonsWidget();
-  _editButtons->setMinimumWidth(150);
-  _editButtons->setMaximumWidth(190);
+  editButtons_ = new EditButtonsWidget();
+  editButtons_->setMinimumWidth(150);
+  editButtons_->setMaximumWidth(190);
 
-  connect(_editButtons, &EditButtonsWidget::create_task_requested, this,
+  connect(editButtons_, &EditButtonsWidget::create_task_requested, this,
           &MainPage::create_task_requested);
 
-  _model = new QStandardItemModel(0, 1, this);
+  model_ = new QStandardItemModel(0, 1, this);
 
   // for (int i = 1; i < 5; i++) {
   //   // TODO: create Item from Task object?
@@ -69,29 +69,29 @@ MainPage::MainPage(QWidget* parent) : QWidget{parent} {
   item->setData(task->dueDate, DueDateRole);
   item->setCheckable(true);
   item->setCheckState(task->done ? Qt::Checked : Qt::Unchecked);
-  _model->appendRow(item);
+  model_->appendRow(item);
 
-  _listView = new QListView(this);
-  _listView->setObjectName("taskList");
-  _listView->setModel(_model);
+  listView_ = new QListView(this);
+  listView_->setObjectName("taskList");
+  listView_->setModel(model_);
 
-  _selectionModel = _listView->selectionModel();
+  selectionModel_ = listView_->selectionModel();
 
-  connect(_editButtons, &EditButtonsWidget::delete_task_requested, this,
+  connect(editButtons_, &EditButtonsWidget::delete_task_requested, this,
           &MainPage::delete_task);
 
-  _layout->addWidget(_listView, 1);
-  _layout->addWidget(_editButtons, 0);
+  layout_->addWidget(listView_, 1);
+  layout_->addWidget(editButtons_, 0);
 
-  connect(_selectionModel, &QItemSelectionModel::selectionChanged, this,
+  connect(selectionModel_, &QItemSelectionModel::selectionChanged, this,
           &MainPage::check_selection);
 
-  connect(this, &MainPage::items_selected, _editButtons,
+  connect(this, &MainPage::items_selected, editButtons_,
           &EditButtonsWidget::show_function_buttons);
 
-  connect(this, &MainPage::items_not_selected, _editButtons,
+  connect(this, &MainPage::items_not_selected, editButtons_,
           &EditButtonsWidget::hide_function_buttons);
 
-  connect(_listView, &QListView::doubleClicked, this,
+  connect(listView_, &QListView::doubleClicked, this,
           &MainPage::edit_task_requested);
 }

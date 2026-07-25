@@ -22,14 +22,14 @@ class EditPage : public QWidget {
  signals:
 
  private:
-  QStandardItemModel* _model;
-  QLineEdit* _title_edit;
-  QPlainTextEdit* _description_edit;
-  QDateTimeEdit* _due_date_edit;
-  QCheckBox* _done_checkbox;
-  QPushButton* _save_button;
+  QStandardItemModel* model_;
+  QLineEdit* titleEdit_;
+  QPlainTextEdit* descriptionEdit_;
+  QDateTimeEdit* dueDateEdit_;
+  QCheckBox* doneCheckbox_;
+  QPushButton* saveButton_;
 
-  QPersistentModelIndex _current_index;
+  QPersistentModelIndex currentIndex_;
 };
 
 #endif  // EDITPAGE_H

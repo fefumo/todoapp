@@ -9,32 +9,32 @@
 #include "editpage.h"
 #include "mainpage.h"
 
-void MainWindow::goto_edit_tab() { _tabs->setCurrentWidget(_edit_page); }
+void MainWindow::goto_edit_tab() { tabs_->setCurrentWidget(editPage_); }
 
 void MainWindow::setup_pages() {
-  _tabs = new QTabWidget(this);
+  tabs_ = new QTabWidget(this);
 
-  _tabs->tabBar()->setDocumentMode(true);
-  _tabs->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  tabs_->tabBar()->setDocumentMode(true);
+  tabs_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  _main_page = new MainPage(_tabs);
-  _edit_page = new EditPage(_tabs, _main_page->getModel());
+  mainPage_ = new MainPage(tabs_);
+  editPage_ = new EditPage(tabs_, mainPage_->getModel());
 
-  _tabs->addTab(_main_page, "main");
-  _tabs->addTab(_edit_page, "edit");
-  connect(_main_page, &MainPage::create_task_requested, this,
+  tabs_->addTab(mainPage_, "main");
+  tabs_->addTab(editPage_, "edit");
+  connect(mainPage_, &MainPage::create_task_requested, this,
           &MainWindow::goto_edit_tab);
 
-  connect(_main_page, &::MainPage::edit_task_requested, this,
+  connect(mainPage_, &::MainPage::edit_task_requested, this,
           [this](const QModelIndex& index) {
-            _edit_page->editTask(index);
+            editPage_->editTask(index);
             goto_edit_tab();
           });
 }
 
 MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {
-  _layout = new QVBoxLayout(this);
-  _layout->setContentsMargins(0, 0, 0, 0);
+  layout_ = new QVBoxLayout(this);
+  layout_->setContentsMargins(0, 0, 0, 0);
 
   setup_pages();
 
@@ -42,6 +42,6 @@ MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {
   connect(exit_button, &QPushButton::clicked, &QApplication::exit);
   exit_button->setProperty("role", "primary");
 
-  _layout->addWidget(_tabs);
-  _layout->addWidget(exit_button);
+  layout_->addWidget(tabs_);
+  layout_->addWidget(exit_button);
 }

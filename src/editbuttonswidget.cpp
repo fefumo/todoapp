@@ -17,35 +17,35 @@ EditButtonsWidget::EditButtonsWidget(QWidget* parent) : QWidget{parent} {
 
   auto* layout = new QVBoxLayout(this);
 
-  create_button = new QPushButton("create", this);
-  delete_button = new QPushButton("delete", this);
-  edit_button = new QPushButton("edit", this);
+  createButton_ = new QPushButton("create", this);
+  deleteButton_ = new QPushButton("delete", this);
+  editButton_ = new QPushButton("edit", this);
 
-  create_button->setProperty("role", "primary");
-  delete_button->setProperty("role", "danger");
+  createButton_->setProperty("role", "primary");
+  deleteButton_->setProperty("role", "danger");
 
-  layout->addWidget(create_button);
-  layout->addWidget(edit_button);
+  layout->addWidget(createButton_);
+  layout->addWidget(editButton_);
 
   layout->addStretch();
 
-  layout->addWidget(delete_button);
+  layout->addWidget(deleteButton_);
 
-  connect(create_button, &QPushButton::clicked, this,
+  connect(createButton_, &QPushButton::clicked, this,
           &EditButtonsWidget::create_task_requested);
 
-  connect(delete_button, &QPushButton::clicked, this,
+  connect(deleteButton_, &QPushButton::clicked, this,
           &EditButtonsWidget::delete_task_requested);
 
   hide_function_buttons();
 }
 
 void EditButtonsWidget::hide_function_buttons() {
-  create_button->hide();
-  delete_button->hide();
+  createButton_->hide();
+  deleteButton_->hide();
 }
 
 void EditButtonsWidget::show_function_buttons() {
-  create_button->show();
-  delete_button->show();
+  createButton_->show();
+  deleteButton_->show();
 }

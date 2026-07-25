@@ -13,7 +13,7 @@ class MainPage : public QWidget {
   Q_OBJECT
  public:
   explicit MainPage(QWidget* parent = nullptr);
-  QStandardItemModel* getModel() { return _model; }
+  QStandardItemModel* getModel() { return model_; }
 
  signals:
   void create_task_requested();
@@ -26,11 +26,11 @@ class MainPage : public QWidget {
   void check_selection();
 
  private:
-  QHBoxLayout* _layout;
-  EditButtonsWidget* _editButtons;
-  QStandardItemModel* _model;
-  QListView* _listView;
-  QItemSelectionModel* _selectionModel;
+  QHBoxLayout* layout_;
+  EditButtonsWidget* editButtons_;
+  QStandardItemModel* model_;
+  QListView* listView_;
+  QItemSelectionModel* selectionModel_;
 };
 
 struct Task {

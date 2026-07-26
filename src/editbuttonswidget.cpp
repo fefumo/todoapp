@@ -1,13 +1,9 @@
 #include "editbuttonswidget.h"
 
-#include <QPushButton>
 #include <QVBoxLayout>
 
 // TODO: create a `select from filesystem` button, which handles .md, .txt and
 // maybe some other type of text (depending on the editPage's editor settings)
-
-// TODO: if the item(aka task) is not selected in the view, hide delete and edit
-// buttons
 
 // TODO: think of the way the tasks have to be stored, whther like actual files,
 // or like db items or whatever

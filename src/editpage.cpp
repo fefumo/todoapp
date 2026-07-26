@@ -1,9 +1,5 @@
 #include "editpage.h"
 
-#include <qabstractitemmodel.h>
-#include <qboxlayout.h>
-#include <qnamespace.h>
-
 EditPage::EditPage(QWidget* parent)
     : QWidget{parent},
       titleEdit_(new QLineEdit(this)),

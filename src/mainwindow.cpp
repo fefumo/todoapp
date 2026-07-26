@@ -1,10 +1,6 @@
 #include "mainwindow.h"
 
 #include <QApplication>
-#include <QPushButton>
-#include <QTabBar>
-#include <QTabWidget>
-#include <QVBoxLayout>
 
 #include "editpage.h"
 #include "mainpage.h"

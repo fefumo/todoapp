@@ -1,11 +1,6 @@
 #include "mainpage.h"
 
-#include <qlogging.h>
-
-#include <QHBoxLayout>
 #include <QHeaderView>
-#include <QListView>
-#include <QStandardItemModel>
 
 #include "editbuttonswidget.h"
 
@@ -94,6 +89,7 @@ void MainPage::on_edit_task_requeted() {
     lastEditIndex_.reset();
     return;
   }
+
   const size_t index = static_cast<size_t>(table_->currentRow());
   Task& task = tasks_[index];
   qDebug() << "Editing task" << index << ":" << task.title;

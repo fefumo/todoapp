@@ -41,7 +41,6 @@ class MainPage : public QWidget {
   QHBoxLayout* layout_;
   QTableWidget* table_;
   EditButtonsWidget* editButtons_;
-  QItemSelectionModel* selectionModel_;
 
   void create_table();
   void create_edit_buttons();

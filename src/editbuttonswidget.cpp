@@ -34,6 +34,9 @@ EditButtonsWidget::EditButtonsWidget(QWidget* parent) : QWidget{parent} {
   connect(createButton_, &QPushButton::clicked, this,
           &EditButtonsWidget::create_task_requested);
 
+  connect(editButton_, &QPushButton::clicked, this,
+          &EditButtonsWidget::edit_task_requested);
+
   connect(deleteButton_, &QPushButton::clicked, this,
           &EditButtonsWidget::delete_task_requested);
 

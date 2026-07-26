@@ -19,6 +19,7 @@ class EditButtonsWidget : public QWidget {
  signals:
   void create_task_requested();
   void delete_task_requested();
+  void edit_task_requested();
 
  public slots:
   void hide_function_buttons();

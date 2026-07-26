@@ -47,16 +47,25 @@ void MainPage::add_task_to_table(Task task) {
 
   table_->setItem(row, 2,
                   new QTableWidgetItem(addedTask.done ? "Done" : "Not Done"));
-  qDebug() << "task '" << tasks_.back().title << "' was added to table_";
+  qDebug() << "New template task was added to the table_ at idx(row)" << row;
 }
 
 void MainPage::update_task(Task task) {
-  if (!last_edit_index_) return;
-  if (last_edit_index_ > tasks_.size()) return;
-  tasks_[last_edit_index_.value()] = std::move(task);
-  qDebug() << "Updated task" << last_edit_index_.value() << ":" << task.title;
-  update_table_row(last_edit_index_.value());
-  last_edit_index_.reset();
+  if (!lastEditIndex_) {
+    qDebug() << "last_edit_index_ is invalid";
+    return;
+  }
+
+  if (lastEditIndex_ > tasks_.size()) {
+    qDebug() << "last_edit_index_ > tasks_.size()";
+    return;
+  }
+
+  Task& cur_task = tasks_[lastEditIndex_.value()];
+  cur_task = std::move(task);
+  qDebug() << "Updated task" << lastEditIndex_.value() << ":" << cur_task.title;
+  update_table_row(lastEditIndex_.value());
+  lastEditIndex_.reset();
 }
 
 void MainPage::update_table_row(std::size_t index) {
@@ -71,6 +80,28 @@ void MainPage::update_table_row(std::size_t index) {
   qDebug() << "Updated table row " << index;
 }
 
+void MainPage::on_edit_task_requeted() {
+  if (table_->selectionModel()->selectedRows().size() != 1) {
+    qDebug() << "tried to edit more than one row (task)";
+    lastEditIndex_.reset();
+    return;
+  }
+
+  lastEditIndex_ = table_->currentRow();
+
+  if (!lastEditIndex_) {
+    qDebug() << "last_edit_index_ is invalid while editing task";
+    lastEditIndex_.reset();
+    return;
+  }
+  const size_t index = static_cast<size_t>(table_->currentRow());
+  Task& task = tasks_[index];
+  qDebug() << "Editing task" << index << ":" << task.title;
+  emit edit_task_requested(task);
+}
+
+void MainPage::update_last_edit_index() {}
+
 MainPage::MainPage(QWidget* parent) : QWidget{parent} {
   setObjectName("mainPage");
   setAttribute(Qt::WA_StyledBackground, true);
@@ -83,10 +114,13 @@ MainPage::MainPage(QWidget* parent) : QWidget{parent} {
   connect(
       editButtons_, &EditButtonsWidget::create_task_requested, this, [this]() {
         Task t = {"Title", "Description", QDateTime::currentDateTime(), false};
-        last_edit_index_ = table_->rowCount();
+        lastEditIndex_ = table_->rowCount();
         add_task_to_table(t);
         emit create_task_requested(t);
       });
+
+  connect(editButtons_, &EditButtonsWidget::edit_task_requested, this,
+          &MainPage::on_edit_task_requeted);
 
   connect(editButtons_, &EditButtonsWidget::delete_task_requested, this,
           &MainPage::delete_task);

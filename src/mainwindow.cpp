@@ -28,12 +28,17 @@ void MainWindow::setup_pages() {
 
   tabs_->addTab(mainPage_, "main");
   tabs_->addTab(editPage_, "edit");
+
   connect(mainPage_, &MainPage::create_task_requested, this,
           &MainWindow::set_editor_for_new_task);
+
   connect(editPage_, &EditPage::task_saved, this, [this](Task edited_task) {
     mainPage_->update_task(std::move(edited_task));
     goto_main_tab();
   });
+
+  connect(mainPage_, &MainPage::edit_task_requested, this,
+          &MainWindow::set_editor_for_new_task);
 }
 
 MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {

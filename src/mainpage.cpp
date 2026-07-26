@@ -1,39 +1,74 @@
 #include "mainpage.h"
 
-#include <QtCore/qabstractitemmodel.h>
-#include <QtCore/qvariant.h>
-#include <qdatetime.h>
-#include <qnamespace.h>
+#include <qlogging.h>
 
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QListView>
 #include <QStandardItemModel>
 
 #include "editbuttonswidget.h"
-// #include "task.h"
 
 void MainPage::delete_task() {
-  // TODO: delete multiple selected items
-  if (!selectionModel_->hasSelection()) {
-    qDebug() << "in MainPage::delete_task(): no items selected";
+  const int row = table_->currentRow();
+
+  if (row < 0) {
+    qDebug() << "delete_task(): no task selected";
     return;
   }
-  const QModelIndex index = selectionModel_->currentIndex();
-  QStandardItem* item = model_->itemFromIndex(index);
-  qDebug() << "removing row " << item->row() << ", index: " << index;
-  model_->removeRows(item->row(), 1, index.parent());
+
+  const auto index = static_cast<std::size_t>(row);
+
+  if (index > tasks_.size()) {
+    qWarning() << "delete_task(): invalid row:" << row
+               << " tasks_size:" << tasks_.size();
+    return;
+  }
+
+  tasks_.erase(tasks_.begin() + row);
+  table_->removeRow(row);
+
+  qDebug() << "Removed task at row" << row;
 }
 
-void MainPage::check_selection() {
-  // TODO:: that slot is being called too much. i have to think about a better
-  // solution (somehow get a signal for when there is no selection)
-  if (selectionModel_->hasSelection()) {
-    qDebug() << "emitting items_selected";
-    emit items_selected();
-  } else {
-    qDebug() << "emitting items_not_selected";
-    emit items_not_selected();
+void MainPage::add_task_to_table(Task task) {
+  tasks_.push_back(std::move(task));
+
+  const Task& addedTask = tasks_.back();
+  const int row = table_->rowCount();
+
+  table_->insertRow(row);
+
+  table_->setItem(row, 0, new QTableWidgetItem(addedTask.title));
+
+  table_->setItem(
+      row, 1,
+      new QTableWidgetItem(addedTask.dueDate.toString("yyyy-MM-dd HH:mm")));
+
+  table_->setItem(row, 2,
+                  new QTableWidgetItem(addedTask.done ? "Done" : "Not Done"));
+  qDebug() << "task '" << tasks_.back().title << "' was added to table_";
+}
+
+void MainPage::update_task(Task task) {
+  if (!last_edit_index_) return;
+  if (last_edit_index_ > tasks_.size()) return;
+  tasks_[last_edit_index_.value()] = std::move(task);
+  qDebug() << "Updated task" << last_edit_index_.value() << ":" << task.title;
+  update_table_row(last_edit_index_.value());
+  last_edit_index_.reset();
+}
+
+void MainPage::update_table_row(std::size_t index) {
+  if (index >= tasks_.size()) {
+    return;
   }
+  const Task& task = tasks_[index];
+  const int row = static_cast<int>(index);
+  table_->item(row, 0)->setText(task.title);
+  table_->item(row, 1)->setText(task.dueDate.toString("yyyy-MM-dd HH:mm"));
+  table_->item(row, 2)->setText(task.done ? "Done" : "Not Done");
+  qDebug() << "Updated table row " << index;
 }
 
 MainPage::MainPage(QWidget* parent) : QWidget{parent} {
@@ -42,56 +77,50 @@ MainPage::MainPage(QWidget* parent) : QWidget{parent} {
 
   layout_ = new QHBoxLayout(this);
 
-  editButtons_ = new EditButtonsWidget();
-  editButtons_->setMinimumWidth(150);
-  editButtons_->setMaximumWidth(190);
+  create_table();
+  create_edit_buttons();
 
-  connect(editButtons_, &EditButtonsWidget::create_task_requested, this,
-          &MainPage::create_task_requested);
-
-  model_ = new QStandardItemModel(0, 1, this);
-
-  // for (int i = 1; i < 5; i++) {
-  //   // TODO: create Item from Task object?
-  //   // Task* task = new Task();
-  //   // smth like QStandardItem* item = new QStandardItem(task);?
-  //   // or maybe subclass from standarditem idk...
-  //
-  //   _model->appendRow(new QStandardItem(QString(QString::number(i) +
-  //   "item")));
-  // }
-
-  Task* task = new Task({"someTitle", "something here",
-                         QDateTime(QDate(2026, 07, 20), QTime(14, 58, 34))});
-  auto* item = new QStandardItem();
-  item->setData(task->title, Qt::DisplayRole);
-  item->setData(task->description, DescriptionRole);
-  item->setData(task->dueDate, DueDateRole);
-  item->setCheckable(true);
-  item->setCheckState(task->done ? Qt::Checked : Qt::Unchecked);
-  model_->appendRow(item);
-
-  listView_ = new QListView(this);
-  listView_->setObjectName("taskList");
-  listView_->setModel(model_);
-
-  selectionModel_ = listView_->selectionModel();
+  connect(
+      editButtons_, &EditButtonsWidget::create_task_requested, this, [this]() {
+        Task t = {"Title", "Description", QDateTime::currentDateTime(), false};
+        last_edit_index_ = table_->rowCount();
+        add_task_to_table(t);
+        emit create_task_requested(t);
+      });
 
   connect(editButtons_, &EditButtonsWidget::delete_task_requested, this,
           &MainPage::delete_task);
 
-  layout_->addWidget(listView_, 1);
-  layout_->addWidget(editButtons_, 0);
-
-  connect(selectionModel_, &QItemSelectionModel::selectionChanged, this,
-          &MainPage::check_selection);
-
-  connect(this, &MainPage::items_selected, editButtons_,
+  connect(table_, &QTableWidget::itemClicked, editButtons_,
           &EditButtonsWidget::show_function_buttons);
+  qDebug() << "mainpage created";
+}
 
-  connect(this, &MainPage::items_not_selected, editButtons_,
-          &EditButtonsWidget::hide_function_buttons);
+void MainPage::create_table() {
+  table_ = new QTableWidget(0, 3, this);
+  table_->setObjectName("taskTable");
+  // table_->setShowGrid(false);
+  // table_->verticalHeader()->setVisible(false);
 
-  connect(listView_, &QListView::doubleClicked, this,
-          &MainPage::edit_task_requested);
+  table_->setHorizontalHeaderLabels({"Task", "Due date", "Status"});
+
+  table_->setSelectionBehavior(QAbstractItemView::SelectRows);
+  table_->setSelectionMode(QAbstractItemView::SingleSelection);
+
+  auto* header = table_->horizontalHeader();
+  header->setSectionResizeMode(0, QHeaderView::Stretch);
+  header->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+  header->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+
+  // table_->setSelectionModel(selectionModel_);
+  qDebug() << "table created";
+  // table_->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+  layout_->addWidget(table_);
+}
+
+void MainPage::create_edit_buttons() {
+  editButtons_ = new EditButtonsWidget();
+  editButtons_->setMinimumWidth(150);
+  editButtons_->setMaximumWidth(190);
+  layout_->addWidget(editButtons_, 0);
 }

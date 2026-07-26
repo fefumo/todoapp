@@ -10,4 +10,4 @@ TARGET="todoapp"
 
 cmake --build "$BUILD_DIR" --parallel
 
-$BUILD_DIR/$TARGET
+QT_SCALE_FACTOR=1 $BUILD_DIR/$TARGET

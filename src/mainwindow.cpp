@@ -10,6 +10,12 @@
 #include "mainpage.h"
 
 void MainWindow::goto_edit_tab() { tabs_->setCurrentWidget(editPage_); }
+void MainWindow::goto_main_tab() { tabs_->setCurrentWidget(mainPage_); }
+
+void MainWindow::set_editor_for_new_task(Task& task) {
+  editPage_->set_task(task);
+  goto_edit_tab();
+}
 
 void MainWindow::setup_pages() {
   tabs_ = new QTabWidget(this);
@@ -18,18 +24,16 @@ void MainWindow::setup_pages() {
   tabs_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   mainPage_ = new MainPage(tabs_);
-  editPage_ = new EditPage(tabs_, mainPage_->getModel());
+  editPage_ = new EditPage(tabs_);
 
   tabs_->addTab(mainPage_, "main");
   tabs_->addTab(editPage_, "edit");
   connect(mainPage_, &MainPage::create_task_requested, this,
-          &MainWindow::goto_edit_tab);
-
-  connect(mainPage_, &::MainPage::edit_task_requested, this,
-          [this](const QModelIndex& index) {
-            editPage_->editTask(index);
-            goto_edit_tab();
-          });
+          &MainWindow::set_editor_for_new_task);
+  connect(editPage_, &EditPage::task_saved, this, [this](Task edited_task) {
+    mainPage_->update_task(std::move(edited_task));
+    goto_main_tab();
+  });
 }
 
 MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {
@@ -37,6 +41,7 @@ MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {
   layout_->setContentsMargins(0, 0, 0, 0);
 
   setup_pages();
+  qDebug() << "pages created";
 
   QPushButton* exit_button = new QPushButton("Exit", this);
   connect(exit_button, &QPushButton::clicked, &QApplication::exit);
@@ -44,4 +49,5 @@ MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {
 
   layout_->addWidget(tabs_);
   layout_->addWidget(exit_button);
+  qDebug() << "MainWindow created";
 }

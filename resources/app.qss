@@ -42,30 +42,46 @@ QTabBar::tab:selected {
 
 /* Task list */
 
-QListView#taskList {
+QTableWidget#taskTable {
     background-color: {{surface}};
     color: {{text}};
 
     border: 1px solid {{border}};
     border-radius: 5px;
 
-    /* outline: none; */
+    gridline-color: {{border}};
+    outline: none;
+
+    selection-background-color: {{accent}};
+    selection-color: {{background}};
 }
 
-QListView#taskList::item {
-    /* padding: 6px; */
-    border-radius: 4px;
-}
-
-QListView#taskList::item:hover {
+QTableWidget#taskTable::item:hover {
     background-color: {{border}};
 }
 
-QListView#taskList::item:selected {
-    background-color: {{accent}};
+QTableWidget#taskTable::item:selected {
     color: {{background}};
 }
 
+/* Horizontal and vertical headers */
+QTableWidget#taskTable QHeaderView::section {
+    background-color: {{surface}};
+    color: {{text}};
+
+    padding: 6px;
+    border: none;
+    border-right: 1px solid {{border}};
+    border-bottom: 1px solid {{border}};
+}
+
+/* Top-left corner between the headers */
+QTableWidget#taskTable QTableCornerButton::section {
+    background-color: {{surface}};
+    border: none;
+    border-right: 1px solid {{border}};
+    border-bottom: 1px solid {{border}};
+}
 
 /* Button panel */
 

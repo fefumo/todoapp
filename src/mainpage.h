@@ -4,45 +4,46 @@
 #include <QDateTime>
 #include <QHBoxLayout>
 #include <QListView>
-#include <QStandardItemModel>
+#include <QTableWidget>
 #include <QWidget>
 
 #include "editbuttonswidget.h"
-
-class MainPage : public QWidget {
-  Q_OBJECT
- public:
-  explicit MainPage(QWidget* parent = nullptr);
-  QStandardItemModel* getModel() { return model_; }
-
- signals:
-  void create_task_requested();
-  void items_selected();
-  void items_not_selected();
-  void edit_task_requested(const QModelIndex& index);
-
- private slots:
-  void delete_task();
-  void check_selection();
-
- private:
-  QHBoxLayout* layout_;
-  EditButtonsWidget* editButtons_;
-  QStandardItemModel* model_;
-  QListView* listView_;
-  QItemSelectionModel* selectionModel_;
-};
 
 struct Task {
   QString title;
   QString description;
   QDateTime dueDate;
-  bool done = false;
+  bool done;
 };
 
-enum TaskRole : int {
-  DescriptionRole = Qt::UserRole + 1,
-  DueDateRole,
+class MainPage : public QWidget {
+  Q_OBJECT
+ public:
+  explicit MainPage(QWidget* parent = nullptr);
+  void update_task(Task task);
+  void update_table_row(std::size_t index);
+
+ signals:
+  void create_task_requested(Task& task);
+  void edit_task_requested(const QTableWidget& table);
+  void items_selected();
+  void items_not_selected();
+
+ private slots:
+  void delete_task();
+  void add_task_to_table(Task task);
+
+ private:
+  std::vector<Task> tasks_;
+  std::optional<std::size_t> last_edit_index_;
+
+  QHBoxLayout* layout_;
+  QTableWidget* table_;
+  EditButtonsWidget* editButtons_;
+  QItemSelectionModel* selectionModel_;
+
+  void create_table();
+  void create_edit_buttons();
 };
 
 #endif  // MAINPAGE_H

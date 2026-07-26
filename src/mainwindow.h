@@ -16,15 +16,16 @@ class MainWindow : public QWidget {
 
  private slots:
   void goto_edit_tab();
+  void goto_main_tab();
 
  private:
-  QList<Task> notes_;
   QVBoxLayout* layout_;
   QTabWidget* tabs_;
   MainPage* mainPage_;
   EditPage* editPage_;
 
   void setup_pages();
+  void set_editor_for_new_task(Task& task);
 };
 
 #endif  // !MAINWINDOW_H

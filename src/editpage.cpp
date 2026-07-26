@@ -4,22 +4,8 @@
 #include <qboxlayout.h>
 #include <qnamespace.h>
 
-#include "mainpage.h"
-
-void EditPage::editTask(const QModelIndex& index) {
-  if (!index.isValid()) return;
-
-  currentIndex_ = index;
-  titleEdit_->setText(index.data(Qt::DisplayRole).toString());
-  descriptionEdit_->setPlainText(index.data(DescriptionRole).toString());
-  dueDateEdit_->setDate(index.data(DueDateRole).toDate());
-  doneCheckbox_->setChecked(index.data(Qt::CheckStateRole).toInt() ==
-                             Qt::Checked);
-}
-
-EditPage::EditPage(QWidget* parent, QStandardItemModel* model)
+EditPage::EditPage(QWidget* parent)
     : QWidget{parent},
-      model_{model},
       titleEdit_(new QLineEdit(this)),
       descriptionEdit_(new QPlainTextEdit(this)),
       dueDateEdit_(new QDateTimeEdit(this)),
@@ -36,16 +22,19 @@ EditPage::EditPage(QWidget* parent, QStandardItemModel* model)
   layout->addWidget(doneCheckbox_);
   layout->addWidget(saveButton_);
 
-  connect(saveButton_, &QPushButton::clicked, this, &EditPage::saveTask);
+  connect(saveButton_, &QPushButton::clicked, this,
+          [this]() { emit task_saved(task_from_widgets()); });
 }
 
-void EditPage::saveTask() {
-  if (!currentIndex_.isValid()) return;
-  model_->setData(currentIndex_, titleEdit_->text(), Qt::DisplayRole);
-  model_->setData(currentIndex_, descriptionEdit_->toPlainText(),
-                  DescriptionRole);
-  model_->setData(currentIndex_, dueDateEdit_->dateTime(), DueDateRole);
-  model_->setData(currentIndex_,
-                  doneCheckbox_->isChecked() ? Qt::Checked : Qt::Unchecked,
-                  Qt::CheckStateRole);
+Task EditPage::task_from_widgets() const {
+  return Task{titleEdit_->text(), descriptionEdit_->toPlainText(),
+              dueDateEdit_->dateTime(), doneCheckbox_->isChecked()};
+}
+
+void EditPage::set_task(Task& task) {
+  titleEdit_->setText(task.title);
+  descriptionEdit_->setPlainText(task.description);
+  dueDateEdit_->setDateTime(task.dueDate);
+  doneCheckbox_->setCheckState(task.done ? Qt::CheckState::Checked
+                                         : Qt::CheckState::Unchecked);
 }

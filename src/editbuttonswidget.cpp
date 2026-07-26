@@ -38,14 +38,20 @@ EditButtonsWidget::EditButtonsWidget(QWidget* parent) : QWidget{parent} {
           &EditButtonsWidget::delete_task_requested);
 
   hide_function_buttons();
+  qDebug() << "edit buttons created";
 }
 
 void EditButtonsWidget::hide_function_buttons() {
-  createButton_->hide();
+  editButton_->hide();
   deleteButton_->hide();
+  buttonsShown_ = false;
+  qDebug() << "buttons hidden";
 }
 
 void EditButtonsWidget::show_function_buttons() {
-  createButton_->show();
+  if (buttonsShown_) return;
+  editButton_->show();
   deleteButton_->show();
+  buttonsShown_ = true;
+  qDebug() << "buttons shown";
 }

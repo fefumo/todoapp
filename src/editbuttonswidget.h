@@ -14,6 +14,7 @@ class EditButtonsWidget : public QWidget {
   QPushButton* createButton_;
   QPushButton* deleteButton_;
   QPushButton* editButton_;
+  bool buttonsShown_;
 
  signals:
   void create_task_requested();

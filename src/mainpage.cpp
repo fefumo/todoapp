@@ -42,6 +42,13 @@ void MainPage::add_task_to_table(Task task) {
 
   table_->setItem(row, 2,
                   new QTableWidgetItem(addedTask.done ? "Done" : "Not Done"));
+
+  // set each item to be uneditable
+  for (auto i = 0; i < table_->columnCount(); i++) {
+    auto item = table_->item(row, i);
+    item->setFlags(item->flags() ^ Qt::ItemFlag::ItemIsEditable);
+  }
+
   qDebug() << "New template task was added to the table_ at idx(row)" << row;
 }
 
@@ -75,7 +82,7 @@ void MainPage::update_table_row(std::size_t index) {
   qDebug() << "Updated table row " << index;
 }
 
-void MainPage::on_edit_task_requeted() {
+void MainPage::on_edit_task_requested() {
   if (table_->selectionModel()->selectedRows().size() != 1) {
     qDebug() << "tried to edit more than one row (task)";
     lastEditIndex_.reset();
@@ -106,23 +113,8 @@ MainPage::MainPage(QWidget* parent) : QWidget{parent} {
 
   create_table();
   create_edit_buttons();
+  create_connections();
 
-  connect(
-      editButtons_, &EditButtonsWidget::create_task_requested, this, [this]() {
-        Task t = {"Title", "Description", QDateTime::currentDateTime(), false};
-        lastEditIndex_ = table_->rowCount();
-        add_task_to_table(t);
-        emit create_task_requested(t);
-      });
-
-  connect(editButtons_, &EditButtonsWidget::edit_task_requested, this,
-          &MainPage::on_edit_task_requeted);
-
-  connect(editButtons_, &EditButtonsWidget::delete_task_requested, this,
-          &MainPage::delete_task);
-
-  connect(table_, &QTableWidget::itemClicked, editButtons_,
-          &EditButtonsWidget::show_function_buttons);
   qDebug() << "mainpage created";
 }
 
@@ -153,4 +145,26 @@ void MainPage::create_edit_buttons() {
   editButtons_->setMinimumWidth(150);
   editButtons_->setMaximumWidth(190);
   layout_->addWidget(editButtons_, 0);
+}
+
+void MainPage::create_connections() {
+  connect(
+      editButtons_, &EditButtonsWidget::create_task_requested, this, [this]() {
+        Task t = {"Title", "Description", QDateTime::currentDateTime(), false};
+        lastEditIndex_ = table_->rowCount();
+        add_task_to_table(t);
+        emit create_task_requested(t);
+      });
+
+  connect(editButtons_, &EditButtonsWidget::edit_task_requested, this,
+          &MainPage::on_edit_task_requested);
+
+  connect(editButtons_, &EditButtonsWidget::delete_task_requested, this,
+          &MainPage::delete_task);
+
+  connect(table_, &QTableWidget::itemClicked, editButtons_,
+          &EditButtonsWidget::show_function_buttons);
+
+  connect(table_, &QTableWidget::itemDoubleClicked, this,
+          &MainPage::on_edit_task_requested);
 }

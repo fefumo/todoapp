@@ -56,9 +56,9 @@ QTableWidget#taskTable {
     selection-color: {{background}};
 }
 
-QTableWidget#taskTable::item:hover {
-    background-color: {{border}};
-}
+/* QTableWidget#taskTable::item:hover { */
+/*     background-color: {{border}}; */
+/* } */
 
 QTableWidget#taskTable::item:selected {
     color: {{background}};

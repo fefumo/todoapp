@@ -32,7 +32,7 @@ class MainPage : public QWidget {
  private slots:
   void delete_task();
   void add_task_to_table(Task task);
-  void on_edit_task_requeted();
+  void on_edit_task_requested();
 
  private:
   std::vector<Task> tasks_;
@@ -45,6 +45,7 @@ class MainPage : public QWidget {
   void create_table();
   void create_edit_buttons();
   void update_last_edit_index();
+  void create_connections();
 };
 
 #endif  // MAINPAGE_H

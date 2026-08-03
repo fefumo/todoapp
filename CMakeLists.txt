@@ -11,6 +11,7 @@ qt_add_executable(todoapp
   src/mainpage.h src/mainpage.cpp
   src/editpage.h src/editpage.cpp
   src/editbuttonswidget.h src/editbuttonswidget.cpp
+  src/converter.h src/converter.cpp
 )
 
 qt_add_resources(todoapp "application_styles"

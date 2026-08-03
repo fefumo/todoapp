@@ -8,6 +8,7 @@
 #include <QWidget>
 
 #include "editbuttonswidget.h"
+#define TASKS_FILE_PATH tasks_file_path()
 
 struct Task {
   QString title;
@@ -31,7 +32,7 @@ class MainPage : public QWidget {
 
  private slots:
   void delete_task();
-  void add_task_to_table(Task task);
+  void add_task(Task task);
   void on_edit_task_requested();
 
  private:
@@ -46,6 +47,9 @@ class MainPage : public QWidget {
   void create_edit_buttons();
   void update_last_edit_index();
   void create_connections();
+  bool save_tasks(const QString& filepath) const;
+  bool load_tasks(const QString& filepath);
+  const QString tasks_file_path() const;
 };
 
 #endif  // MAINPAGE_H

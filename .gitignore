@@ -1,3 +1,7 @@
+compile_commands.json
+.clang-format
+.clangd
+
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 

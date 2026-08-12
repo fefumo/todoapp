@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(todoapp LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Svg)
 
 qt_standard_project_setup()
 
@@ -22,29 +22,40 @@ target_sources(${PROJECT_NAME}
   src/editpage.h src/editpage.cpp
   src/editbuttonswidget.h src/editbuttonswidget.cpp
   src/converter.h src/converter.cpp
-  src/appstyle.cpp src/appstyle.h
+  # src/appstyle.h src/appstyle.cpp
 )
+
+add_subdirectory(dep/qlementine)
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         Qt::Core
         Qt::Widgets
+        qlementine
 )
 
+
+# add_library(qlementine STATIC IMPORTED)
+
+# set_target_properties(qlementine PROPERTIES
+#   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/dep/qlementine/build/lib/libqlementine.a"
+#   INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/dep/qlementine/lib/include"
+# )
 
 # Source - https://stackoverflow.com/a/71635802
 # Posted by qqNade
 # Retrieved 2026-08-07, License - CC BY-SA 4.0
-string(TOLOWER ${CMAKE_BUILD_TYPE} build_type)
-if (build_type STREQUAL release)
+
+string(TOLOWER "${CMAKE_BUILD_TYPE}" build_type)
+if (build_type STREQUAL "release")
     target_compile_definitions(${PROJECT_NAME} PUBLIC
         QT_NO_DEBUG_OUTPUT
-        # QT_NO_INFO_OUTPUT
-        # QT_NO_WARNING_OUTPUT
+        QT_NO_INFO_OUTPUT
+        QT_NO_WARNING_OUTPUT
         )
 endif()
 
-# ------------------------------------------------- DONT CARE RN --------------------------------------------------
+# ------------------------------------------------- DONT CARE RN (idk what id does tbh) --------------------------------------------------
 install(TARGETS ${PROJECT_NAME}
     BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

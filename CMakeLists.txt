@@ -5,7 +5,8 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Svg)
 
 qt_standard_project_setup()
 
-qt_add_executable(${PROJECT_NAME})
+qt_add_executable(${PROJECT_NAME}
+  src/mainwindow.ui)
 
 qt_add_resources(${PROJECT_NAME} "application_styles"
   PREFIX "/styles"

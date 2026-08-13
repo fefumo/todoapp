@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QWidget" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1064</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="mainWindowLayout">
+   <item>
+    <widget class="QWidget" name="leftSidebar" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>220</width>
+       <height>0</height>
+      </size>
+     </property>
+     <layout class="QVBoxLayout" name="leftSidebarLayout">
+      <item>
+       <widget class="QLabel" name="navigationTitle">
+        <property name="text">
+         <string>Navigation</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="navigationButtonsLayout">
+        <item>
+         <widget class="QPushButton" name="tasksButton">
+          <property name="text">
+           <string>Tasks</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="calendarButton">
+          <property name="text">
+           <string>Calendar</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="historyButton">
+          <property name="text">
+           <string>History</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="projectsButton">
+          <property name="text">
+           <string>Projects</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="projectsSection" native="true">
+        <layout class="QVBoxLayout" name="projectsSectionLayout">
+         <item>
+          <widget class="QLabel" name="projectsTitle">
+           <property name="text">
+            <string>Projects</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="projectsTable"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="settingsButton">
+        <property name="text">
+         <string>Settings</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QStackedWidget" name="centralStack">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="todayPage">
+      <layout class="QVBoxLayout" name="todayPageLayout">
+       <item>
+        <widget class="QLabel" name="todayPageTitle">
+         <property name="text">
+          <string>Today</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="taskSectionScrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="taskSectionScrollContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>442</width>
+            <height>546</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="scrollAreaLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="todaySectionsLayout">
+             <item>
+              <widget class="QWidget" name="overdueSection" native="true">
+               <layout class="QVBoxLayout" name="overdueSectionLayout">
+                <item>
+                 <widget class="QLabel" name="overdueTitle">
+                  <property name="text">
+                   <string>Overdue</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTableWidget" name="overdueTable"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="todaySection" native="true">
+               <layout class="QVBoxLayout" name="todaySectionLayout">
+                <item>
+                 <widget class="QLabel" name="todayTitle">
+                  <property name="text">
+                   <string>Today</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTableWidget" name="todayTable"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="upcomingSection" native="true">
+               <layout class="QVBoxLayout" name="upcomingSectionLayout">
+                <item>
+                 <widget class="QLabel" name="upcomingTitle">
+                  <property name="text">
+                   <string>Upcoming</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTableWidget" name="upcomingTable"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="completedSection" native="true">
+               <layout class="QVBoxLayout" name="completedSectionLayout">
+                <item>
+                 <widget class="QLabel" name="completedTitle">
+                  <property name="text">
+                   <string>Completed</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTableWidget" name="completedTable"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="editButtonsLayout">
+         <item>
+          <widget class="QPushButton" name="addTaskButton">
+           <property name="text">
+            <string>Add Task</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="deleteTaskButton">
+           <property name="text">
+            <string>Delete Task</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="editTaskButton">
+           <property name="text">
+            <string>Edit Task</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="calendarPage"/>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="rightPanel" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>280</width>
+       <height>0</height>
+      </size>
+     </property>
+     <layout class="QVBoxLayout" name="rightPanelLayout">
+      <item>
+       <widget class="QLabel" name="taskName">
+        <property name="text">
+         <string>TASKNAME</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="dueDate">
+        <property name="text">
+         <string>DUEDATE</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="additionalInfoTitle">
+        <property name="text">
+         <string>Additional info</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="subtasksTitle">
+        <property name="text">
+         <string>Subtasks:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addSubTaskButton">
+        <property name="text">
+         <string>add subtask</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

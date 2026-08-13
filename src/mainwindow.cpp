@@ -9,5 +9,13 @@ MainWindow::MainWindow(QWidget* parent)
   connect(exit_button, &QPushButton::clicked, &QApplication::exit);
   exit_button->setProperty("role", "primary");
 
+  QSlider* s = new QSlider(Qt::Horizontal, this);
+  s->setMinimum(0);
+  s->setMaximum(100);
+  ui->statusArea->layout()->addWidget(s);
+  connect(s, &QSlider::valueChanged, [this, s]() {
+    ui->progressBar->upd((qreal)s->value() / s->maximum());
+  });
+
   qDebug() << "MainWindow created";
 }

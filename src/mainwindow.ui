@@ -113,6 +113,170 @@
          <property name="text">
           <string>Today</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="statusArea" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="CPBar" name="progressBar" native="true"/>
+          </item>
+          <item>
+           <widget class="QWidget" name="overallInfo" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>260</width>
+              <height>0</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <widget class="QLabel" name="statsForTodayTitle">
+               <property name="text">
+                <string>Stats for today:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="doneHorLayout">
+               <item>
+                <widget class="QLabel" name="doneTitle">
+                 <property name="text">
+                  <string>Done:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="doneNum">
+                 <property name="text">
+                  <string>DONE_NUM</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="leftHorLayout">
+               <item>
+                <widget class="QLabel" name="leftTitle">
+                 <property name="text">
+                  <string>Left:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="leftNum">
+                 <property name="text">
+                  <string>LEFT_NUM</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="overdueHorLayout">
+               <item>
+                <widget class="QLabel" name="overdueTitle_2">
+                 <property name="text">
+                  <string>Overdue:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="overdueNum">
+                 <property name="text">
+                  <string>OVERDUE_NUM</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="focusInfo" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <item>
+              <widget class="QLabel" name="curFocusTitle">
+               <property name="text">
+                <string>Current focus:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="curTaskLayout">
+               <item>
+                <widget class="QLabel" name="curTaskTitle">
+                 <property name="text">
+                  <string>Task:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="curTaskName">
+                 <property name="text">
+                  <string>TASKNAME</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="curDueTaskLayout">
+               <item>
+                <widget class="QLabel" name="dueTitle">
+                 <property name="text">
+                  <string>Due:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="curDueDate">
+                 <property name="text">
+                  <string>DUE_DATE</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="curSubtasksLayout">
+               <item>
+                <widget class="QLabel" name="curSubtasksLeftTitle">
+                 <property name="text">
+                  <string>Subtasks left:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="curSubtaskNum">
+                 <property name="text">
+                  <string>SUBTASK_NUM</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -125,8 +289,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>442</width>
-            <height>546</height>
+            <width>470</width>
+            <height>464</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="scrollAreaLayout">
@@ -261,7 +425,7 @@
        <height>0</height>
       </size>
      </property>
-     <layout class="QVBoxLayout" name="rightPanelLayout">
+     <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
        <widget class="QLabel" name="taskName">
         <property name="text">
@@ -273,24 +437,74 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="projectNameTitle">
+        <property name="text">
+         <string>PROJECTNAME</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing</set>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="dueDate">
         <property name="text">
          <string>DUEDATE</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="additionalInfoTitle">
-        <property name="text">
-         <string>Additional info</string>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="subtasksTitle">
-        <property name="text">
-         <string>Subtasks:</string>
-        </property>
+       <widget class="QWidget" name="additionalInfoArea" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="additionalInfoTitle">
+           <property name="text">
+            <string>Additional info</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTextEdit" name="additionalInfoTextEdit"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="subtasksArea" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="subtasksTitle">
+           <property name="text">
+            <string>Subtasks:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="scrollArea">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>228</width>
+              <height>88</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <widget class="QTableWidget" name="tableWidget"/>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
       <item>
@@ -300,11 +514,48 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="Line" name="line_2">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="pomodoroTimerArea" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>360</height>
+         </size>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QLabel" name="Timer">
+           <property name="text">
+            <string>Tomato)</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CPBar</class>
+   <extends>QWidget</extends>
+   <header>cpbar.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -6,13 +6,21 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Svg)
 qt_standard_project_setup()
 
 qt_add_executable(${PROJECT_NAME}
-  src/mainwindow.ui)
+  # i put ui-related files here for readability
+  src/mainwindow.ui
+  src/cpbar.h
+  )
 
 qt_add_resources(${PROJECT_NAME} "application_styles"
   PREFIX "/styles"
   BASE "${CMAKE_CURRENT_SOURCE_DIR}/resources"
   FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/resources/app.qss"
+)
+
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 target_sources(${PROJECT_NAME}

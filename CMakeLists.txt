@@ -31,7 +31,7 @@ target_sources(${PROJECT_NAME}
   src/editpage.h src/editpage.cpp
   src/editbuttonswidget.h src/editbuttonswidget.cpp
   src/converter.h src/converter.cpp
-  # src/appstyle.h src/appstyle.cpp
+  src/appstyle.h src/appstyle.cpp
 )
 
 add_subdirectory(dep/qlementine)

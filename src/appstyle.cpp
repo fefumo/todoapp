@@ -8,6 +8,8 @@
 #include <QIODevice>
 #include <QString>
 
+#include "oclero/qlementine/style/QlementineStyle.hpp"
+
 namespace {
 void replaceThemeTokens(QString& stylesheet) {
   const QHash<QString, QString> tokens{
@@ -47,6 +49,15 @@ bool apply(QApplication& application) {
   application.setStyleSheet(stylesheet);
 
   return true;
+}
+
+void set_label_role(QLabel* label, oclero::qlementine::TextRole role) {
+  auto* style =
+      qobject_cast<oclero::qlementine::QlementineStyle*>(qApp->style());
+  if (!style) return;
+
+  label->setFont(style->fontForTextRole(role));
+  label->setPalette(style->paletteForTextRole(role));
 }
 
 }  // namespace AppStyle

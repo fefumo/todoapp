@@ -7,7 +7,7 @@
 int main(int argc, char* argv[]) {
   QApplication a(argc, argv);
 
-  //AppStyle::apply(a);
+  // AppStyle::apply(a);
   auto style = new oclero::qlementine::QlementineStyle(&a);
   QApplication::setStyle(style);
 

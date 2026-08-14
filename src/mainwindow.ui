@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1064</width>
-    <height>640</height>
+    <height>739</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,6 +33,9 @@
        <widget class="QLabel" name="navigationTitle">
         <property name="text">
          <string>Navigation</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
         </property>
        </widget>
       </item>
@@ -69,7 +72,7 @@
        </layout>
       </item>
       <item>
-       <widget class="Line" name="line">
+       <widget class="Line" name="leftSidebarLine">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
@@ -103,9 +106,6 @@
    </item>
    <item>
     <widget class="QStackedWidget" name="centralStack">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="todayPage">
       <layout class="QVBoxLayout" name="todayPageLayout">
        <item>
@@ -188,7 +188,7 @@
              <item>
               <layout class="QHBoxLayout" name="overdueHorLayout">
                <item>
-                <widget class="QLabel" name="overdueTitle_2">
+                <widget class="QLabel" name="statsOverdueTitle">
                  <property name="text">
                   <string>Overdue:</string>
                  </property>
@@ -240,7 +240,7 @@
              <item>
               <layout class="QHBoxLayout" name="curDueTaskLayout">
                <item>
-                <widget class="QLabel" name="dueTitle">
+                <widget class="QLabel" name="curDueTitle">
                  <property name="text">
                   <string>Due:</string>
                  </property>
@@ -289,8 +289,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>470</width>
-            <height>464</height>
+            <width>484</width>
+            <height>511</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="scrollAreaLayout">
@@ -447,14 +447,56 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="dueDate">
-        <property name="text">
-         <string>DUEDATE</string>
+       <layout class="QHBoxLayout" name="rightPanelCreatedLayout">
+        <property name="spacing">
+         <number>4</number>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
-        </property>
-       </widget>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="createdTitle">
+          <property name="text">
+           <string>Created:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="createdTimeTitle">
+          <property name="text">
+           <string>CREATEDTIME</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="rightPanelDueLayout">
+        <item>
+         <widget class="QLabel" name="dueTitle">
+          <property name="text">
+           <string>Due:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="dueDateTitle">
+          <property name="text">
+           <string>DUEDATE</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QWidget" name="additionalInfoArea" native="true">
@@ -462,19 +504,26 @@
          <item>
           <widget class="QLabel" name="additionalInfoTitle">
            <property name="text">
-            <string>Additional info</string>
+            <string>Additional info:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="additionalInfoTextEdit"/>
+          <widget class="QTextEdit" name="additionalInfoTextEdit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
       </item>
       <item>
        <widget class="QWidget" name="subtasksArea" native="true">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <layout class="QVBoxLayout" name="subtasksAreaLayout">
          <item>
           <widget class="QLabel" name="subtasksTitle">
            <property name="text">
@@ -496,7 +545,7 @@
               <height>88</height>
              </rect>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
+            <layout class="QVBoxLayout" name="scrollAreaWidgetContentsLayout">
              <item>
               <widget class="QTableWidget" name="tableWidget"/>
              </item>
@@ -515,7 +564,7 @@
        </widget>
       </item>
       <item>
-       <widget class="Line" name="line_2">
+       <widget class="Line" name="rightPanelLine">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
@@ -526,12 +575,12 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>360</height>
+          <height>500</height>
          </size>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_7">
+        <layout class="QVBoxLayout" name="pomodoroTimerLayout">
          <item>
-          <widget class="QLabel" name="Timer">
+          <widget class="QLabel" name="timerTitle">
            <property name="text">
             <string>Tomato)</string>
            </property>

@@ -16,6 +16,7 @@ class MainWindow : public QWidget {
  private slots:
 
  private:
+  enum NavigationIndexes { TASKS = 0, CALENDAR, HISTORY, PROJECTS };
   Ui::MainWindow* ui;
 
   void set_editor_for_new_task(Task& task);

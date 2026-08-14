@@ -44,13 +44,6 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 
-# add_library(qlementine STATIC IMPORTED)
-
-# set_target_properties(qlementine PROPERTIES
-#   IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/dep/qlementine/build/lib/libqlementine.a"
-#   INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/dep/qlementine/lib/include"
-# )
-
 # Source - https://stackoverflow.com/a/71635802
 # Posted by qqNade
 # Retrieved 2026-08-07, License - CC BY-SA 4.0

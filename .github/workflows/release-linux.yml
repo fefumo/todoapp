@@ -33,7 +33,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
-          modules: qtsvg qtwayland
+          archives: icu qtbase qtsvg qtwayland
           cache: true
 
       - name: Configure

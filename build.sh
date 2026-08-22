@@ -5,7 +5,7 @@ BUILD_DIR="build"
 APP_NAME="todoapp"
 BUILD_DEBUG_DIR="build/debug"
 BUILD_RELEASE_DIR="build/release"
-PREFIX="dist"
+PREFIX="$PWD/dist"
 
 usage() {
   cat <<'EOF'
@@ -16,17 +16,26 @@ Supported arguments:
   ./build.sh (-p) --prepare         Configure the project for development (set clangd, compile_commands)
   ./build.sh (-d) --debug           Build into build/debug
   ./build.sh (-r) --release         Build into build/release
-  ./build.sh (-i) --install=<path>  Install into `path`. `./dist` by default
+  ./build.sh (-i) --install=<path>  Install into path. ./dist by default.
+                                    path should be absolute.
+                                    For example, use -i=$PWD/asd.
+                                    Use cmake install manually for system installation.
   ./build.sh (-dr) --run            Build and run debug build app (doesn't rebuild)
   ./build.sh (-c) --clean           Remove build and install(prefix) dirs (if any)
 EOF
 }
 
+#TODO: maybe create a simple system installation flag
+
 remove_build_dir() {
-  rm -rf "$BUILD_DIR"
+  if [[ -d "$BUILD_DIR" ]]; then
+    rm -rf "$BUILD_DIR"
+  fi
 }
 remove_prefix_dir() {
-  rm -rf "$PREFIX"
+  if [[ -d "$PREFIX" ]]; then
+    rm -rf "$PREFIX"
+  fi
 }
 
 debugbuild() {
@@ -39,8 +48,7 @@ debugbuild() {
 
 releasebuild() {
   cmake -S . -B "$BUILD_RELEASE_DIR" -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    -DCMAKE_BUILD_TYPE=Release
 
   cmake --build "$BUILD_RELEASE_DIR" --parallel
 }
@@ -75,7 +83,7 @@ if [[ $# -eq 0 ]]; then
   exit 0
 fi
 
-while [ "$1" != "" ]; do
+while [[ $# -gt 0 ]]; do
   case $1 in
   -d | --debug)
     debugbuild
@@ -98,8 +106,15 @@ while [ "$1" != "" ]; do
     ;;
   -i=* | --install=*)
     PREFIX="${1#*=}"
+    if [[ -z "$PREFIX" ]]; then
+      PREFIX="$PWD/dist"
+    fi
     install
-    shift 2
+    shift
+    ;;
+  -i | --install) # uses default PREFIX
+    install
+    shift
     ;;
   -h | --help)
     usage
@@ -115,5 +130,4 @@ while [ "$1" != "" ]; do
     exit 1
     ;;
   esac
-  shift
 done

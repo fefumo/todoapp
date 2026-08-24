@@ -8,7 +8,7 @@ App is developed as a pet project which initially started because I like the pom
 
 ### 📄Release pages
 
-Coming soon...
+Every platform (Linux, Mac, Windows) should be supported and available in the Release Pages. I'm myself building and testing this app on Arch Linux, so feel free to test the app on the platform of your choice.
 
 ### ⚒️ From source
 

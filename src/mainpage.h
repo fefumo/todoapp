@@ -8,14 +8,9 @@
 #include <QWidget>
 
 #include "editbuttonswidget.h"
-#define TASKS_FILE_PATH tasks_file_path()
+#include "task.h"
 
-struct Task {
-  QString title;
-  QString description;
-  QDateTime dueDate;
-  bool done;
-};
+// #define TASKS_FILE_PATH tasks_file_path()
 
 class MainPage : public QWidget {
   Q_OBJECT
@@ -47,7 +42,7 @@ class MainPage : public QWidget {
   void create_edit_buttons();
   void update_last_edit_index();
   void create_connections();
-  bool save_tasks(const QString& filepath) const;
+  // bool save_tasks(const QString& filepath) const;
   bool load_tasks(const QString& filepath);
   const QString tasks_file_path() const;
 };

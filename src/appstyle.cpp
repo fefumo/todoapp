@@ -1,5 +1,7 @@
 #include "appstyle.h"
 
+#include <qdatetime.h>
+
 #include <QApplication>
 #include <QDebug>
 #include <QFile>
@@ -58,6 +60,10 @@ void set_label_role(QLabel* label, oclero::qlementine::TextRole role) {
 
   label->setFont(style->fontForTextRole(role));
   label->setPalette(style->paletteForTextRole(role));
+}
+
+QString format_task_date(const QDateTime& dateTime) {
+  return dateTime.toString("HH:mm MMMM d");
 }
 
 }  // namespace AppStyle

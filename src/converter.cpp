@@ -1,4 +1,5 @@
 #include "converter.h"
+
 #include <qlogging.h>
 
 QJsonObject task_to_json(const Task& task) {
@@ -6,13 +7,15 @@ QJsonObject task_to_json(const Task& task) {
       {"title", task.title},
       {"description", task.description},
       {"dueDate", task.dueDate.toString(Qt::ISODate)},
+      {"creationDate", task.creationDate.toString(Qt::ISODate)},
       {"done", task.done},
   };
 }
 
 std::optional<Task> task_from_json(const QJsonObject& object) {
   if (!object.contains("title") || !object.contains("description") ||
-      !object.contains("done") || !object.contains("dueDate")) {
+      !object.contains("done") || !object.contains("dueDate") ||
+      !object.contains("creationDate")) {
     // qDebug() << "object: " << object;
     // qDebug() << object.contains("title");
     // qDebug() << object.contains("done");
@@ -25,8 +28,11 @@ std::optional<Task> task_from_json(const QJsonObject& object) {
   task.description = object.value("description").toString();
   task.dueDate =
       QDateTime::fromString(object.value("dueDate").toString(), Qt::ISODate);
+  task.creationDate = QDateTime::fromString(
+      object.value("creationDate").toString(), Qt::ISODate);
   task.done = object.value("done").toBool();
-  qDebug() << "created task from json: " << task.title << task.description << task.dueDate << task.done;
+  qDebug() << "created task from json: " << task.title << task.description
+           << task.dueDate << task.creationDate << task.done;
 
   if (!task.dueDate.isValid()) return std::nullopt;
   return task;

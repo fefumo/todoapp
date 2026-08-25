@@ -1,4 +1,5 @@
 #include "mainpage.h"
+
 #include <qlogging.h>
 
 #include <QDir>
@@ -8,79 +9,82 @@
 #include <QSaveFile>
 #include <QStandardPaths>
 
-
 #include "converter.h"
 #include "editbuttonswidget.h"
 
-void MainPage::delete_task() {
-  const int row = table_->currentRow();
-
-  if (row < 0) {
-    qDebug() << "delete_task(): no task selected";
-    return;
-  }
-
-  const auto index = static_cast<std::size_t>(row);
-
-  if (index > tasks_.size()) {
-    qWarning() << "delete_task(): invalid row:" << row
-               << " tasks_size:" << tasks_.size();
-    return;
-  }
-
-  tasks_.erase(tasks_.begin() + row);
-  table_->removeRow(row);
-
-  qDebug() << "Removed task at row" << row;
-}
+// DEPRECATED
+// void MainPage::delete_task() {
+//   const int row = table_->currentRow();
+//
+//   if (row < 0) {
+//     qDebug() << "delete_task(): no task selected";
+//     return;
+//   }
+//
+//   const auto index = static_cast<std::size_t>(row);
+//
+//   if (index > tasks_.size()) {
+//     qWarning() << "delete_task(): invalid row:" << row
+//                << " tasks_size:" << tasks_.size();
+//     return;
+//   }
+//
+//   tasks_.erase(tasks_.begin() + row);
+//   table_->removeRow(row);
+//
+//   qDebug() << "Removed task at row" << row;
+// }
 
 // push back to vector, add task to the table
-void MainPage::add_task(Task task) {
-  tasks_.push_back(std::move(task));
-
-  const Task& addedTask = tasks_.back();
-  const int row = table_->rowCount();
-
-  table_->insertRow(row);
-
-  table_->setItem(row, 0, new QTableWidgetItem(addedTask.title));
-
-  table_->setItem(
-      row, 1,
-      new QTableWidgetItem(addedTask.dueDate.toString("yyyy-MM-dd HH:mm")));
-
-  table_->setItem(row, 2,
-                  new QTableWidgetItem(addedTask.done ? "Done" : "Not Done"));
-
-  // set each item to be uneditable
-  for (auto i = 0; i < table_->columnCount(); i++) {
-    auto item = table_->item(row, i);
-    item->setFlags(item->flags() ^ Qt::ItemFlag::ItemIsEditable);
-  }
-
-  qDebug() << "New template task was added to the table_ at idx(row)" << row;
-}
+// DEPRECATED
+// void MainPage::add_task(Task task) {
+//   tasks_.push_back(std::move(task));
+//
+//   const Task& addedTask = tasks_.back();
+//   const int row = table_->rowCount();
+//
+//   table_->insertRow(row);
+//
+//   table_->setItem(row, 0, new QTableWidgetItem(addedTask.title));
+//
+//   table_->setItem(
+//       row, 1,
+//       new QTableWidgetItem(addedTask.dueDate.toString("yyyy-MM-dd HH:mm")));
+//
+//   table_->setItem(row, 2,
+//                   new QTableWidgetItem(addedTask.done ? "Done" : "Not
+//                   Done"));
+//
+//   // set each item to be uneditable
+//   for (auto i = 0; i < table_->columnCount(); i++) {
+//     auto item = table_->item(row, i);
+//     item->setFlags(item->flags() ^ Qt::ItemFlag::ItemIsEditable);
+//   }
+//
+//   qDebug() << "New template task was added to the table_ at idx(row)" << row;
+// }
 
 // update vector, table, and appData
-void MainPage::update_task(Task task) {
-  if (!lastEditIndex_) {
-    qDebug() << "last_edit_index_ is invalid";
-    return;
-  }
-
-  if (lastEditIndex_ > tasks_.size()) {
-    qDebug() << "last_edit_index_ > tasks_.size()";
-    return;
-  }
-
-  Task& cur_task = tasks_[lastEditIndex_.value()];
-  cur_task = std::move(task);
-  qDebug() << "Updated task" << lastEditIndex_.value() << ":" << cur_task.title;
-  update_table_row(lastEditIndex_.value());
-  save_tasks(TASKS_FILE_PATH);
-  lastEditIndex_.reset();
-}
-
+// DEPRECATED
+// void MainPage::update_task(Task task) {
+//   if (!lastEditIndex_) {
+//     qDebug() << "last_edit_index_ is invalid";
+//     return;
+//   }
+//
+//   if (lastEditIndex_ > tasks_.size()) {
+//     qDebug() << "last_edit_index_ > tasks_.size()";
+//     return;
+//   }
+//
+//   Task& cur_task = tasks_[lastEditIndex_.value()];
+//   cur_task = std::move(task);
+//   qDebug() << "Updated task" << lastEditIndex_.value() << ":" <<
+//   cur_task.title; update_table_row(lastEditIndex_.value());
+//   // save_tasks(TASKS_FILE_PATH);
+//   lastEditIndex_.reset();
+// }
+//
 void MainPage::update_table_row(std::size_t index) {
   if (index >= tasks_.size()) {
     return;
@@ -123,9 +127,9 @@ MainPage::MainPage(QWidget* parent) : QWidget{parent} {
   layout_ = new QHBoxLayout(this);
 
   create_table();
-  if (!load_tasks(TASKS_FILE_PATH)){
-    qWarning() << "Tasks could not be loaded";
-  }
+  // if (!load_tasks(TASKS_FILE_PATH)) {
+  //   qWarning() << "Tasks could not be loaded";
+  // }
   create_edit_buttons();
   create_connections();
 
@@ -167,7 +171,7 @@ void MainPage::create_connections() {
         Task t = {"Title", "Description", QDateTime::currentDateTime(), false};
         lastEditIndex_ = table_->rowCount();
         add_task(t);
-        save_tasks(TASKS_FILE_PATH);
+        // save_tasks(TASKS_FILE_PATH);
         emit create_task_requested(t);
       });
 
@@ -184,102 +188,93 @@ void MainPage::create_connections() {
           &MainPage::on_edit_task_requested);
 }
 
-bool MainPage::save_tasks(const QString& filepath) const {
-  QJsonArray taskArray;
+// DEPRECATED
+// bool MainPage::save_tasks(const QString& filepath) const {
+//   QJsonArray taskArray;
+//
+//   for (const Task& task : tasks_) {
+//     taskArray.append(task_to_json(task));
+//   }
+//
+//   const QJsonObject rootObject{
+//       {"version", 1},
+//       {"tasks", taskArray},
+//   };
+//
+//   const QByteArray jsonData =
+//       QJsonDocument(rootObject).toJson(QJsonDocument::Indented);
+//
+//   QSaveFile file(filepath);
+//
+//   if (!file.open(QIODevice::WriteOnly)) {
+//     qWarning() << "Could not open tasks file for writing:"
+//                << file.errorString();
+//     return false;
+//   }
+//
+//   if (file.write(jsonData) != jsonData.size()) {
+//     qWarning() << "Could not write all task data:" << file.errorString();
+//
+//     file.cancelWriting();
+//     return false;
+//   }
+//
+//   if (!file.commit()) {
+//     qWarning() << "Could not commit tasks file:" << file.errorString();
+//     return false;
+//   }
+//
+//   return true;
+// }
 
-  for (const Task& task : tasks_) {
-    taskArray.append(task_to_json(task));
-  }
-
-  const QJsonObject rootObject{
-      {"version", 1},
-      {"tasks", taskArray},
-  };
-
-  const QByteArray jsonData =
-      QJsonDocument(rootObject).toJson(QJsonDocument::Indented);
-
-  QSaveFile file(filepath);
-
-  if (!file.open(QIODevice::WriteOnly)) {
-    qWarning() << "Could not open tasks file for writing:"
-               << file.errorString();
-    return false;
-  }
-
-  if (file.write(jsonData) != jsonData.size()) {
-    qWarning() << "Could not write all task data:" << file.errorString();
-
-    file.cancelWriting();
-    return false;
-  }
-
-  if (!file.commit()) {
-    qWarning() << "Could not commit tasks file:" << file.errorString();
-    return false;
-  }
-
-  return true;
-}
-
-bool MainPage::load_tasks(const QString& filepath) {
-  QFile file(filepath);
-
-  if (!file.exists()) return true;
-  if (!file.open(QIODevice::ReadOnly)) {
-    qWarning() << "Can't open tasks file: " << file.errorString();
-  }
-  const QByteArray data = file.readAll();
-  QJsonParseError parseError;
-  const QJsonDocument document = QJsonDocument::fromJson(data, &parseError);
-
-  if (parseError.error != QJsonParseError::NoError) {
-    qWarning() << "Can't convert from json: " << parseError.errorString();
-    return false;
-  }
-  if (!document.isObject()) {
-    qWarning() << "Tasks file does not contain a json object";
-    return false;
-  }
-
-  const QJsonObject root = document.object();
-  // qDebug() << "JsonRoot: " << root;
-  const QJsonValue tasksValue = root.value("tasks");
-  // qDebug() << "root.value(): " << tasksValue;
-  std::vector<Task> loadedTasks;
-
-  for (const QJsonValue& value : tasksValue.toArray()) {
-    if (!value.isObject()) {
-      qWarning() << "Invalid task entry";
-      return false;
-    }
-    // qDebug() << "jsonValue: " << value;
-
-    std::optional<Task> task = task_from_json(value.toObject());
-
-    if (!task.has_value()) {
-      qWarning() << "Couldn't deserialze task";
-      return false;
-    }
-
-    loadedTasks.push_back(std::move(task.value()));
-  }
-  tasks_.clear();
-  table_->setRowCount(0);
-
-  for (Task& task : loadedTasks) {
-    add_task(task);
-  }
-  return true;
-}
-
-const QString MainPage::tasks_file_path() const {
-  const QString dir =
-      QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-
-  if (!QDir().mkpath(dir)) {
-    qWarning() << "Could not create application data directory: " << dir;
-  }
-
-  return QDir(dir).filePath("tasks.json");
-}
+// DEPRECATED
+// bool MainPage::load_tasks(const QString& filepath) {
+//   QFile file(filepath);
+//
+//   if (!file.exists()) return true;
+//   if (!file.open(QIODevice::ReadOnly)) {
+//     qWarning() << "Can't open tasks file: " << file.errorString();
+//   }
+//   const QByteArray data = file.readAll();
+//   QJsonParseError parseError;
+//   const QJsonDocument document = QJsonDocument::fromJson(data, &parseError);
+//
+//   if (parseError.error != QJsonParseError::NoError) {
+//     qWarning() << "Can't convert from json: " << parseError.errorString();
+//     return false;
+//   }
+//   if (!document.isObject()) {
+//     qWarning() << "Tasks file does not contain a json object";
+//     return false;
+//   }
+//
+//   const QJsonObject root = document.object();
+//   // qDebug() << "JsonRoot: " << root;
+//   const QJsonValue tasksValue = root.value("tasks");
+//   // qDebug() << "root.value(): " << tasksValue;
+//   std::vector<Task> loadedTasks;
+//
+//   for (const QJsonValue& value : tasksValue.toArray()) {
+//     if (!value.isObject()) {
+//       qWarning() << "Invalid task entry";
+//       return false;
+//     }
+//     // qDebug() << "jsonValue: " << value;
+//
+//     std::optional<Task> task = task_from_json(value.toObject());
+//
+//     if (!task.has_value()) {
+//       qWarning() << "Couldn't deserialze task";
+//       return false;
+//     }
+//
+//     loadedTasks.push_back(std::move(task.value()));
+//   }
+//   tasks_.clear();
+//   table_->setRowCount(0);
+//
+//   for (Task& task : loadedTasks) {
+//     add_task(task);
+//   }
+//   return true;
+// }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1064</width>
-    <height>739</height>
+    <height>1031</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -290,7 +290,7 @@
             <x>0</x>
             <y>0</y>
             <width>484</width>
-            <height>511</height>
+            <height>803</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="scrollAreaLayout">
@@ -427,14 +427,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <widget class="QLabel" name="taskName">
-        <property name="text">
-         <string>TASKNAME</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
-        </property>
-       </widget>
+       <widget class="QLineEdit" name="taskNameEdit"/>
       </item>
       <item>
        <widget class="QLabel" name="projectNameTitle">
@@ -495,6 +488,19 @@
            <string>DUEDATE</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>

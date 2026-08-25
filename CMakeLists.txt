@@ -27,11 +27,12 @@ target_sources(${PROJECT_NAME}
   PRIVATE
   src/main.cpp
   src/mainwindow.h src/mainwindow.cpp
-  src/mainpage.h src/mainpage.cpp
-  src/editpage.h src/editpage.cpp
+  # src/mainpage.h src/mainpage.cpp
   src/editbuttonswidget.h src/editbuttonswidget.cpp
   src/converter.h src/converter.cpp
   src/appstyle.h src/appstyle.cpp
+  src/taskstore.h src/taskstore.cpp
+  src/task.h
 )
 
 add_subdirectory(dep/qlementine)

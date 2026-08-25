@@ -1,28 +1,97 @@
 #include "mainwindow.h"
 
-#include <qapplication.h>
+#include <QApplication>
+#include <QLineEdit>
 
 #include "appstyle.h"
 #include "oclero/qlementine/Common.hpp"
+#include "task.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QWidget(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
   // TODO: add to ui in the future. dont know where for now.
-  QPushButton* exit_button = new QPushButton("Exit", this);
-  connect(exit_button, &QPushButton::clicked, &QApplication::exit);
-  exit_button->setProperty("role", "primary");
+  {
+    QPushButton* exit_button = new QPushButton("Exit", this);
+    connect(exit_button, &QPushButton::clicked, &QApplication::exit);
+    exit_button->setProperty("role", "primary");
+  }
 
-  QSlider* s = new QSlider(Qt::Horizontal, this);
-  s->setMinimum(0);
-  s->setMaximum(100);
-  ui->statusArea->layout()->addWidget(s);
+  {
+    QSlider* s = new QSlider(Qt::Horizontal, this);
+    s->setMinimum(0);
+    s->setMaximum(100);
+    ui->statusArea->layout()->addWidget(s);
 
-  connect(s, &QSlider::valueChanged, [this, s]() {
-    ui->progressBar->upd((qreal)s->value() / s->maximum());
-  });
+    connect(s, &QSlider::valueChanged, [this, s]() {
+      ui->progressBar->upd((qreal)s->value() / s->maximum());
+    });
+  }
 
+  setup_navigation();
+  connect_edit_buttons();
+  setup_labels();
+  setup_task_panel();
+
+  qDebug() << "MainWindow created";
+}
+
+MainWindow::~MainWindow() {
+  // Make sure that everything is loaded on disk before closing the app
+  taskStore_.save();
+}
+
+void MainWindow::setup_task_panel() {
+  saveTimer_.setSingleShot(true);
+  saveTimer_.setInterval(500);
+
+  connect(&saveTimer_, &QTimer::timeout, this, [this]() { taskStore_.save(); });
+
+  connect(ui->addTaskButton, &QPushButton::clicked, this,
+          [this]() { add_new_task(); });
+
+  connect(ui->taskNameEdit, &QLineEdit::textEdited, this,
+          [this](const QString& text) { update_selected_task_title(text); });
+}
+
+void MainWindow::add_new_task() {
+  Task task = TaskStore::dummy_task();
+
+  const auto newIndex = taskStore_.tasks().size();
+  taskStore_.add_task(task);
+  select_task(newIndex);
+  schedule_save();
+
+  ui->taskNameEdit->setFocus();
+}
+
+void MainWindow::select_task(std::size_t index) {
+  selectedTaskIndex_ = index;
+  // TODO: also show task in focus info on the today's page
+  show_task_in_right_panel(taskStore_.tasks().at(index));
+}
+
+void MainWindow::show_task_in_right_panel(const Task& task) {
+  ui->taskNameEdit->setText(task.title);
+  ui->additionalInfoTextEdit->setText(task.description);
+  ui->createdTimeTitle->setText(AppStyle::format_task_date(task.creationDate));
+}
+
+void MainWindow::update_selected_task_title(const QString& title) {
+  if (!selectedTaskIndex_.has_value()) {
+    return;
+  }
+  Task task = taskStore_.tasks().at(selectedTaskIndex_.value());
+  task.title = title;
+  taskStore_.update_task(selectedTaskIndex_.value(), std::move(task));
+  schedule_save();
+}
+
+// Has to be called after every keystroke for debouncing
+void MainWindow::schedule_save() { saveTimer_.start(); }
+
+void MainWindow::setup_navigation() {
   connect(ui->tasksButton, &QPushButton::clicked, this, [this]() {
     ui->centralStack->setCurrentIndex(NavigationIndexes::TASKS);
   });
@@ -38,8 +107,15 @@ MainWindow::MainWindow(QWidget* parent)
   connect(ui->projectsButton, &QPushButton::clicked, this, [this]() {
     ui->centralStack->setCurrentIndex(NavigationIndexes::PROJECTS);
   });
+}
 
-  // --- LABELS ---
+void MainWindow::connect_edit_buttons() {
+  connect(ui->addTaskButton, &QPushButton::clicked, this, [this]() {});
+  connect(ui->deleteTaskButton, &QPushButton::clicked, this, [this]() {});
+  connect(ui->editTaskButton, &QPushButton::clicked, this, [this]() {});
+}
+
+void MainWindow::setup_labels() {
   // left
   AppStyle::set_label_role(ui->navigationTitle,
                            oclero::qlementine::TextRole::H2);
@@ -69,7 +145,7 @@ MainWindow::MainWindow(QWidget* parent)
                            oclero::qlementine::TextRole::H5);
 
   // right
-  AppStyle::set_label_role(ui->taskName, oclero::qlementine::TextRole::H2);
+  // AppStyle::set_label_role(ui->taskName, oclero::qlementine::TextRole::H2);
 
   AppStyle::set_label_role(ui->projectNameTitle,
                            oclero::qlementine::TextRole::Caption);
@@ -83,6 +159,4 @@ MainWindow::MainWindow(QWidget* parent)
   AppStyle::set_label_role(ui->subtasksTitle, oclero::qlementine::TextRole::H5);
 
   AppStyle::set_label_role(ui->timerTitle, oclero::qlementine::TextRole::H2);
-
-  qDebug() << "MainWindow created";
 }

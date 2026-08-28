@@ -16,7 +16,8 @@ std::optional<Task> task_from_json(const QJsonObject& object) {
   if (!object.contains("title") || !object.contains("description") ||
       !object.contains("done") || !object.contains("dueDate") ||
       !object.contains("creationDate")) {
-    // qDebug() << "object: " << object;
+    qCritical() << "Something is wrong with the task object";
+    qDebug() << "object: " << object;
     // qDebug() << object.contains("title");
     // qDebug() << object.contains("done");
     // qDebug() << object.contains("description");
@@ -31,9 +32,12 @@ std::optional<Task> task_from_json(const QJsonObject& object) {
   task.creationDate = QDateTime::fromString(
       object.value("creationDate").toString(), Qt::ISODate);
   task.done = object.value("done").toBool();
+  if (!task.dueDate.isValid() || !task.creationDate.isValid()) {
+    qWarning() << "Task date is invalid";
+    return std::nullopt;
+  }
   qDebug() << "created task from json: " << task.title << task.description
            << task.dueDate << task.creationDate << task.done;
 
-  if (!task.dueDate.isValid()) return std::nullopt;
   return task;
 }

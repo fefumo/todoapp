@@ -15,7 +15,7 @@ class TaskStore : public QObject {
   static Task dummy_task() {
     return Task{.title = "New task",
                 .description = "",
-                .dueDate = {},
+                .dueDate = QDateTime::currentDateTime().addSecs(3600),
                 .creationDate = QDateTime::currentDateTime(),
                 .done = false};
   }
@@ -31,6 +31,7 @@ class TaskStore : public QObject {
 
   const QString tasks_file_path() const;
 
+ private:
   std::vector<Task> tasks_;
 
  signals:

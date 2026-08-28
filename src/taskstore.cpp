@@ -78,6 +78,7 @@ bool TaskStore::save() const {
     return false;
   }
 
+  qDebug() << "Flushed tasks to disk";
   return true;
 }
 
@@ -127,6 +128,7 @@ bool TaskStore::load() {
   for (Task& task : loadedTasks) {
     add_task(task);
   }
-  qDebug() << "Loaded existing tasks (" << tasks_.size() << ")";
+
+  qDebug() << "Loaded existing tasks (" << tasks_.size() << ") from disk";
   return true;
 }

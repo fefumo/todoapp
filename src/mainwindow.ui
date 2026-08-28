@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1064</width>
-    <height>1031</height>
+    <height>1046</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -290,7 +290,7 @@
             <x>0</x>
             <y>0</y>
             <width>484</width>
-            <height>803</height>
+            <height>818</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="scrollAreaLayout">
@@ -483,24 +483,17 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="dueDateTitle">
+         <widget class="QToolButton" name="dueDateButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string>DUEDATE</string>
+           <string>Date Picker</string>
           </property>
          </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </item>

@@ -4,6 +4,7 @@
 #include <QLineEdit>
 
 #include "appstyle.h"
+#include "duedatepicker.h"
 #include "oclero/qlementine/Common.hpp"
 #include "task.h"
 
@@ -53,6 +54,104 @@ void MainWindow::setup_task_panel() {
 
   connect(ui->taskNameEdit, &QLineEdit::textEdited, this,
           [this](const QString& text) { update_selected_task_title(text); });
+
+  connect(ui->dueDateButton, &QToolButton::clicked, this,
+          [this]() { toggle_due_date_picker(); });
+}
+
+void MainWindow::show_task_in_right_panel(const Task& task) {
+  ui->taskNameEdit->setText(task.title);
+  ui->additionalInfoTextEdit->setText(task.description);
+  ui->createdTimeTitle->setText(AppStyle::format_task_date(task.creationDate));
+
+  refresh_due_date_field(task);
+  if (dueDatePicker_) {
+    dueDatePicker_->set_due_date(task.dueDate);
+  }
+}
+
+void MainWindow::update_selected_task_due_date(const QDateTime& dueDate) {
+  if (!isTaskSelected()) return;
+
+  const auto index = selectedTaskIndex_.value();
+  Task task = taskStore_.tasks().at(index);
+  task.dueDate = dueDate;
+
+  taskStore_.update_task(index, std::move(task));
+  refresh_due_date_field(taskStore_.tasks().at(index));
+  schedule_save();
+}
+
+void MainWindow::clear_selected_task_due_date() {
+  if (!isTaskSelected()) return;
+
+  const auto index = selectedTaskIndex_.value();
+  Task task = taskStore_.tasks().at(index);
+  // TODO: provide no due date in the future
+  task.dueDate = QDateTime::currentDateTime();
+
+  taskStore_.update_task(index, std::move(task));
+  refresh_due_date_field(taskStore_.tasks().at(index));
+  schedule_save();
+}
+
+void MainWindow::toggle_due_date_picker() {
+  if (!isTaskSelected()) return;
+
+  ensure_due_date_picker();
+
+  if (dueDatePicker_->isVisible()) {
+    dueDatePicker_->hide();
+  } else {
+    show_due_date_picker();
+  }
+}
+
+void MainWindow::show_due_date_picker() {
+  if (!isTaskSelected()) return;
+
+  ensure_due_date_picker();
+
+  const auto& task = taskStore_.tasks().at(selectedTaskIndex_.value());
+  dueDatePicker_->set_due_date(task.dueDate);
+  dueDatePicker_->adjustSize();
+
+  const QPoint position =
+      ui->dueDateButton->mapToGlobal(QPoint(0, ui->dueDateButton->height()));
+
+  dueDatePicker_->move(position);
+  dueDatePicker_->show();
+  dueDatePicker_->raise();
+  dueDatePicker_->activateWindow();
+}
+
+void MainWindow::ensure_due_date_picker() {
+  if (dueDatePicker_) {
+    return;
+  }
+
+  dueDatePicker_ = new DueDatePicker(this);
+
+  connect(dueDatePicker_, &DueDatePicker::due_date_selected, this,
+          [this](const QDateTime& dueDate) {
+            update_selected_task_due_date(dueDate);
+            dueDatePicker_->hide();
+          });
+
+  connect(dueDatePicker_, &DueDatePicker::due_date_clear_button_clicked, this,
+          [this]() {
+            clear_selected_task_due_date();
+            dueDatePicker_->hide();
+          });
+}
+
+void MainWindow::refresh_due_date_field(const Task& task) {
+  if (task.dueDate.isValid()) {
+    ui->dueDateButton->setText(AppStyle::format_task_date(task.dueDate));
+    return;
+  }
+
+  ui->dueDateButton->setText("No due date");
 }
 
 void MainWindow::add_new_task() {
@@ -72,16 +171,9 @@ void MainWindow::select_task(std::size_t index) {
   show_task_in_right_panel(taskStore_.tasks().at(index));
 }
 
-void MainWindow::show_task_in_right_panel(const Task& task) {
-  ui->taskNameEdit->setText(task.title);
-  ui->additionalInfoTextEdit->setText(task.description);
-  ui->createdTimeTitle->setText(AppStyle::format_task_date(task.creationDate));
-}
-
 void MainWindow::update_selected_task_title(const QString& title) {
-  if (!selectedTaskIndex_.has_value()) {
-    return;
-  }
+  if (!isTaskSelected()) return;
+
   Task task = taskStore_.tasks().at(selectedTaskIndex_.value());
   task.title = title;
   taskStore_.update_task(selectedTaskIndex_.value(), std::move(task));
@@ -110,7 +202,6 @@ void MainWindow::setup_navigation() {
 }
 
 void MainWindow::connect_edit_buttons() {
-  connect(ui->addTaskButton, &QPushButton::clicked, this, [this]() {});
   connect(ui->deleteTaskButton, &QPushButton::clicked, this, [this]() {});
   connect(ui->editTaskButton, &QPushButton::clicked, this, [this]() {});
 }

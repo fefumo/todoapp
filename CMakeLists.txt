@@ -8,6 +8,7 @@ qt_standard_project_setup()
 qt_add_executable(${PROJECT_NAME}
   # i put ui-related files here for readability
   src/mainwindow.ui
+  src/duedatepicker.ui
   src/cpbar.h
 )
 
@@ -32,6 +33,7 @@ target_sources(${PROJECT_NAME}
   src/converter.h src/converter.cpp
   src/appstyle.h src/appstyle.cpp
   src/taskstore.h src/taskstore.cpp
+  src/duedatepicker.h src/duedatepicker.cpp
   src/task.h
 )
 

@@ -32,12 +32,13 @@ std::optional<Task> task_from_json(const QJsonObject& object) {
   task.creationDate = QDateTime::fromString(
       object.value("creationDate").toString(), Qt::ISODate);
   task.done = object.value("done").toBool();
-  if (!task.dueDate.isValid() || !task.creationDate.isValid()) {
+  if ((!task.dueDate.isValid() && !task.dueDate.isNull()) ||
+      !task.creationDate.isValid()) {
     qWarning() << "Task date is invalid";
     return std::nullopt;
   }
   qDebug() << "created task from json: " << task.title << task.description
-           << task.dueDate << task.creationDate << task.done;
+           << task.dueDate << task.creationDate << "done:" << task.done;
 
   return task;
 }

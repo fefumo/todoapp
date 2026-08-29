@@ -98,8 +98,7 @@ void MainWindow::clear_selected_task_due_date() {
 
   const auto index = selectedTaskIndex_.value();
   Task task = taskStore_.tasks().at(index);
-  // TODO: provide no due date in the future
-  task.dueDate = QDateTime::currentDateTime();
+  task.dueDate = QDateTime{};
 
   taskStore_.update_task(index, std::move(task));
   refresh_selected_task_due_date(taskStore_.tasks().at(index));
@@ -146,7 +145,6 @@ void MainWindow::ensure_due_date_picker() {
   connect(dueDatePicker_, &DueDatePicker::due_date_selected, this,
           [this](const QDateTime& dueDate) {
             update_selected_task_due_date(dueDate);
-            dueDatePicker_->hide();
           });
 
   connect(dueDatePicker_, &DueDatePicker::due_date_clear_button_clicked, this,
@@ -158,11 +156,12 @@ void MainWindow::ensure_due_date_picker() {
 
 void MainWindow::refresh_selected_task_due_date(const Task& task) {
   if (task.dueDate.isValid()) {
+    if (ui->dueTitle->isHidden()) ui->dueTitle->show();
     ui->dueDateButton->setText(AppStyle::format_task_date(task.dueDate));
-    return;
+  } else {
+    if (!ui->dueTitle->isHidden()) ui->dueTitle->hide();
+    ui->dueDateButton->setText("Click to set due date");
   }
-
-  ui->dueDateButton->setText("No due date");
 }
 
 void MainWindow::update_selected_task_additional_info() {

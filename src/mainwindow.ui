@@ -491,7 +491,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Date Picker</string>
+           <string>Click to set due date</string>
           </property>
          </widget>
         </item>

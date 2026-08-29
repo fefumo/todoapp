@@ -15,7 +15,7 @@ class TaskStore : public QObject {
   static Task dummy_task() {
     return Task{.title = "New task",
                 .description = "",
-                .dueDate = QDateTime::currentDateTime().addSecs(3600),
+                .dueDate = QDateTime{},
                 .creationDate = QDateTime::currentDateTime(),
                 .done = false};
   }

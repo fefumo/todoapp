@@ -7,6 +7,7 @@
 #include "task.h"
 #include "taskstore.h"
 #include "ui_mainwindow.h"
+#define AUTOSAVE_INTERVAL_MS 500
 
 class DueDatePicker;
 
@@ -33,19 +34,25 @@ class MainWindow : public QWidget {
   void setup_task_panel();
   void add_new_task();
   void select_task(std::size_t index);
-  void show_task_in_right_panel(const Task& task);
-  void update_selected_task_title(const QString& title);
-  void schedule_save();
-
-  void update_selected_task_due_date(const QDateTime& dueDate);
-  void clear_selected_task_due_date();
-  void refresh_due_date_field(const Task& task);
-  void toggle_due_date_picker();
-  void show_due_date_picker();
-  void ensure_due_date_picker();
   bool isTaskSelected() {
     return selectedTaskIndex_.has_value() ? true : false;
   }
+
+  // RIGHT PANEL
+  void show_task_in_right_panel(const Task& task);
+  // Task title
+  void update_selected_task_title(const QString& title);
+  void schedule_save();
+
+  // Due date
+  void refresh_selected_task_due_date(const Task& task);
+  void update_selected_task_due_date(const QDateTime& dueDate);
+  void clear_selected_task_due_date();
+  void toggle_due_date_picker();
+  void show_due_date_picker();
+  void ensure_due_date_picker();
+
+  void update_selected_task_additional_info();
 
   TaskStore taskStore_;
   QTimer saveTimer_;  // for debouncing autosave logic

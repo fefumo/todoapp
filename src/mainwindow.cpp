@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 
+#include <qtextedit.h>
+
 #include <QApplication>
 #include <QLineEdit>
 
@@ -51,7 +53,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::setup_task_panel() {
   saveTimer_.setSingleShot(true);
-  saveTimer_.setInterval(500);
+  saveTimer_.setInterval(AUTOSAVE_INTERVAL_MS);
 
   connect(&saveTimer_, &QTimer::timeout, this, [this]() { taskStore_.save(); });
 
@@ -63,6 +65,9 @@ void MainWindow::setup_task_panel() {
 
   connect(ui->dueDateButton, &QToolButton::clicked, this,
           [this]() { toggle_due_date_picker(); });
+
+  connect(ui->additionalInfoTextEdit, &QTextEdit::textChanged, this,
+          [this]() { update_selected_task_additional_info(); });
 }
 
 void MainWindow::show_task_in_right_panel(const Task& task) {
@@ -70,7 +75,7 @@ void MainWindow::show_task_in_right_panel(const Task& task) {
   ui->additionalInfoTextEdit->setText(task.description);
   ui->createdTimeTitle->setText(AppStyle::format_task_date(task.creationDate));
 
-  refresh_due_date_field(task);
+  refresh_selected_task_due_date(task);
   if (dueDatePicker_) {
     dueDatePicker_->set_due_date(task.dueDate);
   }
@@ -84,7 +89,7 @@ void MainWindow::update_selected_task_due_date(const QDateTime& dueDate) {
   task.dueDate = dueDate;
 
   taskStore_.update_task(index, std::move(task));
-  refresh_due_date_field(taskStore_.tasks().at(index));
+  refresh_selected_task_due_date(taskStore_.tasks().at(index));
   schedule_save();
 }
 
@@ -97,7 +102,7 @@ void MainWindow::clear_selected_task_due_date() {
   task.dueDate = QDateTime::currentDateTime();
 
   taskStore_.update_task(index, std::move(task));
-  refresh_due_date_field(taskStore_.tasks().at(index));
+  refresh_selected_task_due_date(taskStore_.tasks().at(index));
   schedule_save();
 }
 
@@ -151,13 +156,24 @@ void MainWindow::ensure_due_date_picker() {
           });
 }
 
-void MainWindow::refresh_due_date_field(const Task& task) {
+void MainWindow::refresh_selected_task_due_date(const Task& task) {
   if (task.dueDate.isValid()) {
     ui->dueDateButton->setText(AppStyle::format_task_date(task.dueDate));
     return;
   }
 
   ui->dueDateButton->setText("No due date");
+}
+
+void MainWindow::update_selected_task_additional_info() {
+  if (!isTaskSelected()) return;
+
+  const auto index = selectedTaskIndex_.value();
+  Task task = taskStore_.tasks().at(index);
+  task.description = ui->additionalInfoTextEdit->toPlainText();
+
+  taskStore_.update_task(index, std::move(task));
+  schedule_save();
 }
 
 void MainWindow::add_new_task() {

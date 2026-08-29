@@ -30,6 +30,12 @@ MainWindow::MainWindow(QWidget* parent)
     });
   }
 
+  taskStore_.load();
+  // TODO: select last edited task as the default one
+  if (!taskStore_.tasks().empty()) {
+    select_task(taskStore_.tasks().size() - 1);
+  }
+
   setup_navigation();
   connect_edit_buttons();
   setup_labels();

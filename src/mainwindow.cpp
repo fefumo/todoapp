@@ -1,9 +1,12 @@
 #include "mainwindow.h"
 
-#include <qtextedit.h>
+#include <qlogging.h>
+#include <qtablewidget.h>
 
 #include <QApplication>
 #include <QLineEdit>
+#include <QTableWidgetItem>
+#include <QTextEdit>
 
 #include "appstyle.h"
 #include "duedatepicker.h"
@@ -42,6 +45,7 @@ MainWindow::MainWindow(QWidget* parent)
   connect_edit_buttons();
   setup_labels();
   setup_task_panel();
+  populate_tables(taskStore_);
 
   qDebug() << "MainWindow created";
 }
@@ -49,6 +53,21 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow() {
   // Make sure that everything is loaded on disk before closing the app
   taskStore_.save();
+}
+
+QTableWidget* MainWindow::table(TableType type) {
+  switch (type) {
+    case TableType::Overdue:
+      return ui->overdueTable;
+    case TableType::Completed:
+      return ui->completedTable;
+    case TableType::Today:
+      return ui->todayTable;
+    case TableType::Upcoming:
+      return ui->upcomingTable;
+    default:
+      return nullptr;
+  }
 }
 
 void MainWindow::setup_task_panel() {
@@ -225,6 +244,33 @@ void MainWindow::setup_navigation() {
 void MainWindow::connect_edit_buttons() {
   connect(ui->deleteTaskButton, &QPushButton::clicked, this, [this]() {});
   connect(ui->editTaskButton, &QPushButton::clicked, this, [this]() {});
+}
+
+void MainWindow::populate_tables(const TaskStore& ts) {
+  for (auto task : ts.tasks()) {
+    QTableWidgetItem* item = new QTableWidgetItem(task.title);
+
+    const QDate dueDate = task.dueDate.date();
+    const QDate today = QDate::currentDate();
+
+    if (task.done) {
+      add_item(table(TableType::Completed), item);
+    } else if (task.dueDate.isNull() || dueDate == today) {
+      add_item(table(TableType::Today), item);
+    } else if (dueDate > today) {
+      add_item(table(TableType::Upcoming), item);
+    } else {
+      add_item(table(TableType::Overdue), item);
+    }
+    qDebug() << "Put task" << task.title << "to the table";
+  }
+}
+
+void MainWindow::add_item(QTableWidget* table, QTableWidgetItem* item) {
+  table->setColumnCount(1);
+  const int row = table->rowCount();
+  table->insertRow(row);
+  table->setItem(row, 0, item);
 }
 
 void MainWindow::setup_labels() {

@@ -322,7 +322,12 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QTableWidget" name="overdueTable"/>
+                 <widget class="QTableWidget" name="overdueTable">
+                  <property name="columnCount">
+                   <number>1</number>
+                  </property>
+                  <column/>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -338,7 +343,12 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QTableWidget" name="todayTable"/>
+                 <widget class="QTableWidget" name="todayTable">
+                  <property name="columnCount">
+                   <number>1</number>
+                  </property>
+                  <column/>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -354,7 +364,12 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QTableWidget" name="upcomingTable"/>
+                 <widget class="QTableWidget" name="upcomingTable">
+                  <property name="columnCount">
+                   <number>1</number>
+                  </property>
+                  <column/>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -370,7 +385,12 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QTableWidget" name="completedTable"/>
+                 <widget class="QTableWidget" name="completedTable">
+                  <property name="columnCount">
+                   <number>1</number>
+                  </property>
+                  <column/>
+                 </widget>
                 </item>
                </layout>
               </widget>

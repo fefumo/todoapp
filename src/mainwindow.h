@@ -21,6 +21,15 @@ class MainWindow : public QWidget {
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow();
 
+  enum class TableType {
+    Overdue,
+    Today,
+    Upcoming,
+    Completed,
+  };
+
+  QTableWidget* table(TableType type);
+
  private:
   enum NavigationIndexes { TASKS = 0, CALENDAR, HISTORY, PROJECTS };
   Ui::MainWindow* ui;
@@ -37,6 +46,14 @@ class MainWindow : public QWidget {
   bool isTaskSelected() {
     return selectedTaskIndex_.has_value() ? true : false;
   }
+
+  // TodayPage
+  void populate_tables(const TaskStore& ts);
+  void add_item(QTableWidget* table, QTableWidgetItem* item);
+  void refresh_tables(QTableWidget* t1, QTableWidget* t2);  // TODO:
+  void swap_items();                                        // TODO:
+  void refresh_stats();                                     // TODO:
+  void refresh_current_focus();                             // TODO:
 
   // RIGHT PANEL
   void show_task_in_right_panel(const Task& task);

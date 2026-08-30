@@ -140,9 +140,9 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
              <item>
-              <widget class="QLabel" name="statsForTodayTitle">
+              <widget class="QLabel" name="overallStatsTitle">
                <property name="text">
-                <string>Stats for today:</string>
+                <string>Your stats:</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -180,24 +180,6 @@
                 <widget class="QLabel" name="leftNum">
                  <property name="text">
                   <string>LEFT_NUM</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="overdueHorLayout">
-               <item>
-                <widget class="QLabel" name="statsOverdueTitle">
-                 <property name="text">
-                  <string>Overdue:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="overdueNum">
-                 <property name="text">
-                  <string>OVERDUE_NUM</string>
                  </property>
                 </widget>
                </item>
@@ -445,9 +427,20 @@
        <height>0</height>
       </size>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_5">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QLineEdit" name="taskNameEdit"/>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QCheckBox" name="checkDone">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="taskNameEdit"/>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QLabel" name="projectNameTitle">

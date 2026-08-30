@@ -47,32 +47,37 @@ class MainWindow : public QWidget {
     return selectedTaskIndex_.has_value() ? true : false;
   }
 
+  void schedule_save();
+
   // TodayPage
   void populate_tables(const TaskStore& ts);
   void add_item(QTableWidget* table, QTableWidgetItem* item);
-  void refresh_tables(QTableWidget* t1, QTableWidget* t2);  // TODO:
-  void swap_items();                                        // TODO:
-  void refresh_stats();                                     // TODO:
-  void refresh_current_focus();                             // TODO:
+  void refresh_tables();                                // TODO:
+  void swap_items(QTableWidget* t1, QTableWidget* t2);  // TODO:
+
+  void refresh_stats();
+  void refresh_task_in_focus();
+  void on_task_state_change(Qt::CheckState state);
 
   // RIGHT PANEL
   void show_task_in_right_panel(const Task& task);
   // Task title
   void update_selected_task_title(const QString& title);
-  void schedule_save();
 
   // Due date
   void refresh_selected_task_due_date(const Task& task);
   void update_selected_task_due_date(const QDateTime& dueDate);
   void clear_selected_task_due_date();
+  // Due date picker
   void toggle_due_date_picker();
   void show_due_date_picker();
   void ensure_due_date_picker();
 
+  // Additional info
   void update_selected_task_additional_info();
 
   TaskStore taskStore_;
   QTimer saveTimer_;  // for debouncing autosave logic
   std::optional<std::size_t> selectedTaskIndex_;
-  DueDatePicker* dueDatePicker_ = nullptr;
+  DueDatePicker* dueDatePicker_ = nullptr;  // lazy load
 };

@@ -29,10 +29,18 @@ class TaskStore : public QObject {
   bool load();
   bool save() const;
 
+  size_t get_done_today() { return done_; }
+  size_t get_left_today() { return left_; }
+
   const QString tasks_file_path() const;
+  void syncStats(Task& task, size_t index);
 
  private:
   std::vector<Task> tasks_;
+  size_t done_;
+  size_t left_;
+
+  void count_done_tasks();
 
  signals:
   void tasks_changed();

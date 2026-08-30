@@ -1,12 +1,13 @@
 #include "mainwindow.h"
 
 #include <qlogging.h>
-#include <qtablewidget.h>
 
 #include <QApplication>
+#include <QCheckBox>
 #include <QLineEdit>
 #include <QTableWidgetItem>
 #include <QTextEdit>
+#include <QtCore>
 
 #include "appstyle.h"
 #include "duedatepicker.h"
@@ -35,7 +36,6 @@ MainWindow::MainWindow(QWidget* parent)
     });
   }
 
-  taskStore_.load();
   // TODO: select last edited task as the default one
   if (!taskStore_.tasks().empty()) {
     select_task(taskStore_.tasks().size() - 1);
@@ -80,17 +80,24 @@ void MainWindow::setup_task_panel() {
           [this]() { add_new_task(); });
 
   connect(ui->taskNameEdit, &QLineEdit::textEdited, this,
-          [this](const QString& text) { update_selected_task_title(text); });
+          [this](const QString& text) {
+            update_selected_task_title(text);
+            refresh_task_in_focus();
+          });
 
   connect(ui->dueDateButton, &QToolButton::clicked, this,
           [this]() { toggle_due_date_picker(); });
 
   connect(ui->additionalInfoTextEdit, &QTextEdit::textChanged, this,
           [this]() { update_selected_task_additional_info(); });
+
+  connect(ui->checkDone, &QCheckBox::checkStateChanged, this,
+          &MainWindow::on_task_state_change);
 }
 
 void MainWindow::show_task_in_right_panel(const Task& task) {
   ui->taskNameEdit->setText(task.title);
+  ui->checkDone->setChecked(task.done);
   ui->additionalInfoTextEdit->setText(task.description);
   ui->createdTimeTitle->setText(AppStyle::format_task_date(task.creationDate));
 
@@ -164,11 +171,13 @@ void MainWindow::ensure_due_date_picker() {
   connect(dueDatePicker_, &DueDatePicker::due_date_selected, this,
           [this](const QDateTime& dueDate) {
             update_selected_task_due_date(dueDate);
+            refresh_task_in_focus();
           });
 
   connect(dueDatePicker_, &DueDatePicker::due_date_clear_button_clicked, this,
           [this]() {
             clear_selected_task_due_date();
+            refresh_task_in_focus();
             dueDatePicker_->hide();
           });
 }
@@ -207,8 +216,51 @@ void MainWindow::add_new_task() {
 
 void MainWindow::select_task(std::size_t index) {
   selectedTaskIndex_ = index;
-  // TODO: also show task in focus info on the today's page
-  show_task_in_right_panel(taskStore_.tasks().at(index));
+  Task task = taskStore_.tasks().at(index);
+  show_task_in_right_panel(task);
+  refresh_task_in_focus();
+  refresh_stats();
+  qDebug() << "Selected task" << taskStore_.tasks().at(index).title << "("
+           << index << ")";
+}
+
+void MainWindow::refresh_task_in_focus() {
+  if (!selectedTaskIndex_.has_value()) return;
+
+  auto task = taskStore_.tasks().at(selectedTaskIndex_.value());
+
+  ui->curTaskName->setText(task.title);
+
+  if (task.dueDate.isNull()) {
+    ui->curDueDate->setText("No due date set");
+  } else {
+    ui->curDueDate->setText(AppStyle::format_task_date(task.dueDate));
+  }
+
+  ui->curSubtaskNum->setText(
+      "0");  // Placeholder. Subtasks are not implemented yet
+}
+
+void MainWindow::refresh_stats() {
+  const size_t done_today = taskStore_.get_done_today();
+  const size_t left_today = taskStore_.get_left_today();
+
+  ui->doneNum->setText(QString::number(done_today));
+  ui->leftNum->setText(QString::number(left_today));
+
+  qDebug() << "set text to " << done_today << "," << left_today;
+}
+
+void MainWindow::on_task_state_change(Qt::CheckState state) {
+  if (!isTaskSelected()) return;
+
+  auto t = taskStore_.tasks().at(selectedTaskIndex_.value());
+
+  t.done = state == Qt::CheckState::Checked ? true : false;
+
+  taskStore_.update_task(selectedTaskIndex_.value(), t);
+  refresh_stats();
+  taskStore_.save();
 }
 
 void MainWindow::update_selected_task_title(const QString& title) {
@@ -283,12 +335,10 @@ void MainWindow::setup_labels() {
   AppStyle::set_label_role(ui->todayPageTitle,
                            oclero::qlementine::TextRole::H2);
 
-  AppStyle::set_label_role(ui->statsForTodayTitle,
+  AppStyle::set_label_role(ui->overallStatsTitle,
                            oclero::qlementine::TextRole::H4);
   AppStyle::set_label_role(ui->doneTitle, oclero::qlementine::TextRole::H5);
   AppStyle::set_label_role(ui->leftTitle, oclero::qlementine::TextRole::H5);
-  AppStyle::set_label_role(ui->statsOverdueTitle,
-                           oclero::qlementine::TextRole::H5);
 
   AppStyle::set_label_role(ui->curFocusTitle, oclero::qlementine::TextRole::H4);
   AppStyle::set_label_role(ui->curTaskTitle, oclero::qlementine::TextRole::H5);

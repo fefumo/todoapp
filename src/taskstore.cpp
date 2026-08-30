@@ -9,9 +9,39 @@
 
 #include "converter.h"
 
-TaskStore::TaskStore(QObject* parent) : QObject(parent) {}
+TaskStore::TaskStore(QObject* parent) : QObject(parent), done_(0), left_(0) {
+  load();
+  count_done_tasks();
+}
 
 const std::vector<Task>& TaskStore::tasks() const { return tasks_; }
+
+void TaskStore::count_done_tasks() {
+  if (tasks_.empty()) return;
+  for (auto t : tasks_) {
+    if (t.done)
+      done_++;
+    else
+      left_++;
+  }
+}
+
+void TaskStore::syncStats(Task& task, size_t index) {
+  bool prevStateOfTask = tasks_.at(index).done;
+  bool newStateOfTask = task.done;
+  qDebug() << "syncing, prev:" << prevStateOfTask << "new: " << newStateOfTask;
+  if (prevStateOfTask != newStateOfTask) {
+    // 1 - previously was not done. now done
+    if (prevStateOfTask == false) {
+      done_++;
+      left_--;
+      // 2 - task was done but now isnt
+    } else {
+      done_--;
+      left_++;
+    }
+  }
+}
 
 const QString TaskStore::tasks_file_path() const {
   const QString dir =
@@ -31,6 +61,7 @@ void TaskStore::add_task(Task task) {
 }
 
 void TaskStore::update_task(std::size_t index, Task task) {
+  syncStats(task, index);
   tasks_.at(index) = std::move(task);
   qDebug() << "Updated task" << index << ":" << tasks_.at(index).title;
   emit task_changed(index);

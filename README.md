@@ -48,6 +48,7 @@ Possible additions after saving data to a server are:
 
 - Store & sync user's data between devices
 - Leader board with a number of tasks/projects and time spent on them.
+- Graph the data (time spent, taks done, etc.), maybe integration in google docs or an in-app functionality.
 
 # ✏️Draft look:
 ![desired_look](./desired_look.svg)
